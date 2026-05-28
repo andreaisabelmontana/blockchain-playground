@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Blockchain, Cryptocurrencies & Fintech — Interactive Concepts</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⛓</span>
+    <div>
+      <h1>Blockchain · Crypto · Fintech</h1>
+      <p class="subtitle">An interactive companion to the course — play with every core concept.</p>
+    </div>
+  </div>
+  <nav class="sessions">
+    <a href="#intro">Intro</a>
+    <a href="#hash">Hash</a>
+    <a href="#signatures">Signatures</a>
+    <a href="#merkle">Merkle</a>
+    <a href="#blockchain">Chain</a>
+    <a href="#mining">Mining</a>
+    <a href="#utxo">UTXO</a>
+    <a href="#halving">Halving</a>
+    <a href="#forks">Forks</a>
+    <a href="#wallet">Wallet</a>
+    <a href="#accounts">ETH Accts</a>
+    <a href="#gas">Gas</a>
+    <a href="#evm">EVM</a>
+    <a href="#solidity">Solidity</a>
+    <a href="#erc20">ERC-20</a>
+    <a href="#nft">NFTs</a>
+    <a href="#amm">AMM</a>
+    <a href="#rollups">L2</a>
+    <a href="#consensus">PoW vs PoS</a>
+  </nav>
+</header>
+
+<main>
+
+<section id="intro" class="card hero">
+  <h2>What is this?</h2>
+  <p>This is an interactive playground covering every core concept in the
+     <em>Blockchain, Cryptocurrencies, and Fintech</em> course — from cryptographic primitives
+     to mining, the UTXO model, Ethereum accounts, the EVM, gas, and smart contracts in Solidity.
+     Each module is a live, in-browser demo. Nothing is faked: hashing uses the browser's
+     <code>SubtleCrypto.SHA-256</code>; signatures use real ECDSA; the chain visualizer mines
+     real nonces against a real difficulty target.</p>
+  <div class="grid roadmap">
+    <a class="tile" href="#hash"><b>1 · Hashing</b><span>SHA-256, avalanche effect</span></a>
+    <a class="tile" href="#signatures"><b>2 · Digital signatures</b><span>ECDSA keypairs, sign &amp; verify</span></a>
+    <a class="tile" href="#merkle"><b>3 · Merkle trees</b><span>Tamper-evident transaction sets</span></a>
+    <a class="tile" href="#blockchain"><b>4 · Block chain</b><span>Linked blocks, tamper detection</span></a>
+    <a class="tile" href="#mining"><b>5 · Proof of work</b><span>Find the nonce, tune difficulty</span></a>
+    <a class="tile" href="#utxo"><b>6 · UTXO model</b><span>Bitcoin transactions visualised</span></a>
+    <a class="tile" href="#forks"><b>7 · Bitcoin forks</b><span>SegWit, BCH, BSV, Taproot timeline</span></a>
+    <a class="tile" href="#wallet"><b>8 · Wallets &amp; addresses</b><span>Privkey → pubkey → 0x address</span></a>
+    <a class="tile" href="#accounts"><b>9 · ETH account model</b><span>EOA vs contract, balances, nonce</span></a>
+    <a class="tile" href="#gas"><b>10 · Gas &amp; fees</b><span>EIP-1559 calculator</span></a>
+    <a class="tile" href="#evm"><b>11 · EVM</b><span>Stack-machine opcode walker</span></a>
+    <a class="tile" href="#solidity"><b>12 · Solidity</b><span>Deploy &amp; call a live contract</span></a>
+    <a class="tile" href="#erc20"><b>13 · ERC-20 token</b><span>transfer, approve, transferFrom</span></a>
+    <a class="tile" href="#nft"><b>14 · NFTs (ERC-721)</b><span>Mint, transfer, metadata</span></a>
+    <a class="tile" href="#amm"><b>15 · AMM (x·y=k)</b><span>Swap with real price impact</span></a>
+    <a class="tile" href="#rollups"><b>16 · L2 rollups</b><span>Batch N L2 txs → 1 L1 tx</span></a>
+    <a class="tile" href="#halving"><b>17 · Bitcoin halving</b><span>Block reward &amp; supply curve</span></a>
+    <a class="tile" href="#consensus"><b>18 · PoW vs PoS</b><span>Energy, finality, security</span></a>
+  </div>
+</section>
+
+<!-- HASH -->
+<section id="hash" class="card">
+  <h2>1 · Cryptographic hashing — SHA-256</h2>
+  <p>A hash function takes any input and returns a fixed-size fingerprint.
+     Even a one-bit change in the input completely changes the output —
+     this is the <strong>avalanche effect</strong>.
+     Type below and watch the digest update live.</p>
+  <div class="row">
+    <div class="col">
+      <label>Input</label>
+      <textarea id="hash-input" rows="4">Satoshi Nakamoto</textarea>
+      <div class="meta"><span id="hash-bytes">0 bytes</span></div>
+    </div>
+    <div class="col">
+      <label>SHA-256 digest (hex, 256 bits)</label>
+      <code id="hash-output" class="digest"></code>
+      <label class="mt">Bit difference vs. previous input</label>
+      <div class="bitstrip" id="hash-bitdiff"></div>
+      <div class="meta"><span id="hash-bitcount">—</span></div>
+    </div>
+  </div>
+  <p class="note">Try flipping a single letter and watch ~50% of the output bits flip — that's why
+     hashes work for fingerprinting blocks and detecting tampering.</p>
+</section>
+
+<!-- SIGNATURES -->
+<section id="signatures" class="card">
+  <h2>2 · Digital signatures — ECDSA</h2>
+  <p>Crypto-wallets don't store coins — they store a <em>private key</em> that can sign messages.
+     Anyone with your <em>public key</em> can verify the signature, but only you could have made it.
+     This demo uses real ECDSA on the P-256 curve via the browser's WebCrypto.</p>
+  <div class="row">
+    <div class="col">
+      <button id="sig-keygen" class="primary">Generate keypair</button>
+      <label>Public key (hex)</label>
+      <code id="sig-pub" class="digest small"></code>
+      <label>Private key (hex) <span class="warn">— never share IRL!</span></label>
+      <code id="sig-priv" class="digest small"></code>
+    </div>
+    <div class="col">
+      <label>Message</label>
+      <textarea id="sig-msg" rows="2">Pay Alice 10 BTC</textarea>
+      <div class="btnrow">
+        <button id="sig-sign">Sign</button>
+        <button id="sig-verify">Verify</button>
+        <button id="sig-tamper">Tamper &amp; verify</button>
+      </div>
+      <label>Signature (hex)</label>
+      <code id="sig-out" class="digest small"></code>
+      <div id="sig-result" class="result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MERKLE -->
+<section id="merkle" class="card">
+  <h2>3 · Merkle trees</h2>
+  <p>Each block commits to its transactions through a <strong>Merkle root</strong> —
+     a single hash that summarises hundreds of transactions. Change any leaf and
+     the root changes, which lets light clients verify membership cheaply.</p>
+  <div class="row">
+    <div class="col">
+      <label>Transactions (one per line)</label>
+      <textarea id="merkle-input" rows="8">Alice → Bob   1.0 BTC
+Bob → Carol   0.5 BTC
+Carol → Dave  0.2 BTC
+Dave → Eve    0.1 BTC
+Eve → Frank   0.05 BTC</textarea>
+      <button id="merkle-build" class="primary">Build tree</button>
+    </div>
+    <div class="col">
+      <label>Merkle root</label>
+      <code id="merkle-root" class="digest small"></code>
+      <label class="mt">Tree</label>
+      <div id="merkle-tree" class="tree"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCKCHAIN -->
+<section id="blockchain" class="card">
+  <h2>4 · The block chain</h2>
+  <p>Each block stores the hash of the previous block, forming a chain.
+     Edit any block's data and every block downstream is invalidated — the chain
+     turns red. Re-mine to repair it (and notice how expensive an attacker's job becomes).</p>
+  <div class="controls">
+    <label>Difficulty (leading hex zeros)
+      <input id="chain-diff" type="number" min="1" max="5" value="3" />
+    </label>
+    <button id="chain-add" class="primary">Add block</button>
+    <button id="chain-reset">Reset</button>
+  </div>
+  <div id="chain" class="chain"></div>
+</section>
+
+<!-- MINING -->
+<section id="mining" class="card">
+  <h2>5 · Proof of work — mining a single block</h2>
+  <p>Miners try nonces until <code>SHA-256(block) &lt; target</code>. Watch the search live.
+     Doubling the leading-zero count makes the work ~16× harder.</p>
+  <div class="controls">
+    <label>Difficulty
+      <input id="mine-diff" type="range" min="1" max="6" value="4" />
+      <span id="mine-diff-val">4</span>
+    </label>
+    <button id="mine-start" class="primary">Start mining</button>
+    <button id="mine-stop">Stop</button>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label>Block data</label>
+      <textarea id="mine-data" rows="2">Block #1 · tx batch</textarea>
+      <div class="stats">
+        <div><b>Hashes tried:</b> <span id="mine-tries">0</span></div>
+        <div><b>Hashes/sec:</b> <span id="mine-rate">0</span></div>
+        <div><b>Elapsed:</b> <span id="mine-elapsed">0</span> s</div>
+      </div>
+    </div>
+    <div class="col">
+      <label>Current candidate hash</label>
+      <code id="mine-hash" class="digest small">—</code>
+      <label class="mt">Nonce</label>
+      <code id="mine-nonce" class="digest small">0</code>
+      <div id="mine-result" class="result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- UTXO -->
+<section id="utxo" class="card">
+  <h2>6 · The UTXO model (Bitcoin)</h2>
+  <p>Bitcoin doesn't track balances — it tracks <strong>unspent transaction outputs</strong>.
+     To pay, you consume whole UTXOs as inputs and create new UTXOs as outputs (one to the
+     recipient, one back to yourself as change).</p>
+  <div class="controls">
+    <button id="utxo-reset">Reset</button>
+    <span class="meta">Click a UTXO to select it, then build a tx.</span>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label>Alice's UTXO set</label>
+      <div id="utxo-alice" class="utxo-set"></div>
+      <label class="mt">Bob's UTXO set</label>
+      <div id="utxo-bob" class="utxo-set"></div>
+    </div>
+    <div class="col">
+      <label>New transaction</label>
+      <div class="tx-builder">
+        <div>Sender: <select id="utxo-sender"><option>Alice</option><option>Bob</option></select></div>
+        <div>Recipient: <select id="utxo-recipient"><option>Bob</option><option>Alice</option></select></div>
+        <div>Amount: <input id="utxo-amt" type="number" value="0.4" step="0.1" min="0.1" /> BTC</div>
+        <div>Selected inputs: <span id="utxo-selected">none</span></div>
+        <div>Total selected: <span id="utxo-total">0</span> BTC</div>
+        <button id="utxo-send" class="primary">Build &amp; broadcast</button>
+      </div>
+      <label class="mt">Mempool / history</label>
+      <div id="utxo-log" class="log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FORKS -->
+<section id="forks" class="card">
+  <h2>7 · Bitcoin forks &amp; upgrades</h2>
+  <p>Forks happen when the rules change. <strong>Soft forks</strong> tighten rules and stay
+     backward-compatible; <strong>hard forks</strong> are incompatible and split the chain.
+     Click each event to learn what happened.</p>
+  <div id="forks-timeline" class="timeline"></div>
+  <div id="forks-detail" class="detail"></div>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="card">
+  <h2>8 · Wallets &amp; Ethereum addresses</h2>
+  <p>An Ethereum address is derived from a private key by:
+     <code>privKey → secp256k1 pubKey → keccak256(pubKey)[12:] → 0x...</code>.
+     This demo uses a P-256 stand-in for browser-native crypto, but the pipeline is identical.</p>
+  <div class="row">
+    <div class="col">
+      <button id="wallet-gen" class="primary">Generate wallet</button>
+      <label>Private key</label>
+      <code id="wallet-priv" class="digest small"></code>
+      <label>Public key</label>
+      <code id="wallet-pub" class="digest small"></code>
+      <label>Address (last 20 bytes of pubkey-hash)</label>
+      <code id="wallet-addr" class="digest small"></code>
+    </div>
+    <div class="col">
+      <label>Mnemonic (BIP-39 style, illustrative)</label>
+      <code id="wallet-mnemonic" class="digest small"></code>
+      <p class="note">In a real wallet (Metamask, Ledger…), the same 12/24-word seed phrase
+         deterministically generates millions of keypairs via BIP-32/44 derivation paths.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="accounts" class="card">
+  <h2>9 · The Ethereum account model</h2>
+  <p>Unlike Bitcoin's UTXO model, Ethereum has two kinds of accounts:</p>
+  <ul>
+    <li><b>EOA</b> — Externally Owned Account, controlled by a private key. Has balance &amp; nonce.</li>
+    <li><b>Contract</b> — code lives at the address. Has balance, nonce, code, and storage.</li>
+  </ul>
+  <div class="controls">
+    <button id="acct-send" class="primary">Send 1 ETH: Alice → Bob</button>
+    <button id="acct-call">Call Counter.increment()</button>
+    <button id="acct-reset">Reset</button>
+  </div>
+  <div id="accounts-view" class="accounts"></div>
+  <label>State log</label>
+  <div id="acct-log" class="log"></div>
+</section>
+
+<!-- GAS -->
+<section id="gas" class="card">
+  <h2>10 · Gas &amp; fees (EIP-1559)</h2>
+  <p>Every EVM operation costs gas. Post-EIP-1559, the user pays
+     <code>(baseFee + priorityFee) × gasUsed</code>; the baseFee is burned, the priority fee
+     ("tip") goes to the validator.</p>
+  <div class="row">
+    <div class="col">
+      <label>Operation</label>
+      <select id="gas-op">
+        <option value="21000">Simple ETH transfer (21 000 gas)</option>
+        <option value="51000">ERC-20 transfer (~51 000 gas)</option>
+        <option value="150000">Uniswap swap (~150 000 gas)</option>
+        <option value="500000">NFT mint (~500 000 gas)</option>
+        <option value="2000000">Contract deploy (~2 000 000 gas)</option>
+      </select>
+      <label>Base fee (gwei)</label>
+      <input id="gas-base" type="number" value="20" step="1" min="0" />
+      <label>Priority fee / tip (gwei)</label>
+      <input id="gas-tip" type="number" value="2" step="0.5" min="0" />
+      <label>ETH price (USD)</label>
+      <input id="gas-eth" type="number" value="3500" step="50" min="0" />
+    </div>
+    <div class="col">
+      <h3>Cost</h3>
+      <div class="kpi"><b>Gas used:</b> <span id="gas-used">21 000</span></div>
+      <div class="kpi"><b>Effective gas price:</b> <span id="gas-price">22 gwei</span></div>
+      <div class="kpi"><b>ETH cost:</b> <span id="gas-eth-cost">0.000462</span> ETH</div>
+      <div class="kpi big"><b>USD cost:</b> $<span id="gas-usd-cost">1.62</span></div>
+      <div class="split">
+        <div>Burned (baseFee × gasUsed): $<span id="gas-burn">—</span></div>
+        <div>Validator (tip × gasUsed): $<span id="gas-val">—</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVM -->
+<section id="evm" class="card">
+  <h2>11 · The EVM — opcode walker</h2>
+  <p>The Ethereum Virtual Machine is a stack machine. Step through a tiny program
+     that computes <code>(3 + 4) × 2</code> and watch the stack.</p>
+  <div class="row">
+    <div class="col">
+      <label>Bytecode (annotated)</label>
+      <pre id="evm-code" class="evm"></pre>
+      <div class="btnrow">
+        <button id="evm-step" class="primary">Step</button>
+        <button id="evm-run">Run</button>
+        <button id="evm-reset">Reset</button>
+      </div>
+    </div>
+    <div class="col">
+      <label>Stack (top first)</label>
+      <div id="evm-stack" class="stack"></div>
+      <label>Gas used</label>
+      <code id="evm-gas">0</code>
+      <label>PC</label>
+      <code id="evm-pc">0</code>
+    </div>
+  </div>
+</section>
+
+<!-- SOLIDITY -->
+<section id="solidity" class="card">
+  <h2>12 · Solidity — deploy &amp; call a contract</h2>
+  <p>This is a JavaScript-backed simulation of the <code>Counter</code> contract you'd write
+     in Remix. Deploy it, call the functions, watch the state and gas cost.</p>
+  <div class="row">
+    <div class="col">
+      <label>Source</label>
+<pre class="sol"><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Counter {
+    uint256 public count;
+    address public owner;
+
+    constructor() { owner = msg.sender; }
+
+    function increment() external { count += 1; }
+    function decrement() external {
+        require(count &gt; 0, "underflow");
+        count -= 1;
+    }
+    function reset() external {
+        require(msg.sender == owner, "not owner");
+        count = 0;
+    }
+}</code></pre>
+      <div class="btnrow">
+        <button id="sol-deploy" class="primary">Deploy</button>
+      </div>
+    </div>
+    <div class="col">
+      <label>Contract state</label>
+      <div class="kpi"><b>address:</b> <code id="sol-addr">— not deployed —</code></div>
+      <div class="kpi"><b>count:</b> <span id="sol-count">—</span></div>
+      <div class="kpi"><b>owner:</b> <code id="sol-owner">—</code></div>
+      <label class="mt">Caller (msg.sender)</label>
+      <select id="sol-caller">
+        <option value="0xA11ce0000000000000000000000000000000A11CE">Alice (owner)</option>
+        <option value="0xB0b0000000000000000000000000000000000B0B">Bob</option>
+      </select>
+      <div class="btnrow">
+        <button id="sol-inc">increment()</button>
+        <button id="sol-dec">decrement()</button>
+        <button id="sol-reset">reset()</button>
+      </div>
+      <label>Tx log</label>
+      <div id="sol-log" class="log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ERC-20 -->
+<section id="erc20" class="card">
+  <h2>13 · ERC-20 fungible tokens</h2>
+  <p>The ERC-20 standard defines six functions every fungible token must support.
+     The two killer features that enable DEXes &amp; DeFi are <code>approve</code> and
+     <code>transferFrom</code> — they let a contract pull tokens from you only up to a
+     pre-approved allowance.</p>
+  <div class="row">
+    <div class="col">
+      <div class="tx-builder">
+        <div>From: <select id="erc20-from"><option>Alice</option><option>Bob</option><option>Carol</option><option>DEX</option></select></div>
+        <div>To:   <select id="erc20-to"><option>Bob</option><option>Alice</option><option>Carol</option><option>DEX</option></select></div>
+        <div>Amount: <input id="erc20-amt" type="number" value="100" step="10" /></div>
+        <div class="btnrow">
+          <button id="erc20-transfer" class="primary">transfer()</button>
+          <button id="erc20-approve">approve()</button>
+          <button id="erc20-transferFrom">DEX.transferFrom()</button>
+          <button id="erc20-reset">Reset</button>
+        </div>
+      </div>
+      <p class="note">Try: <b>1)</b> Alice <code>approve(DEX, 200)</code>, then
+         <b>2)</b> Set From=Alice, To=Bob, Amount=50 and click
+         <code>DEX.transferFrom()</code>. The DEX pulls 50 CRS from Alice to Bob without
+         Alice signing the actual transfer — this is how Uniswap takes your tokens.</p>
+    </div>
+    <div class="col">
+      <label>Balances</label>
+      <div id="erc20-balances" class="account"></div>
+      <label class="mt">Allowances (owner → spender)</label>
+      <div id="erc20-allowances" class="account"></div>
+      <label class="mt">Tx log</label>
+      <div id="erc20-log" class="log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NFT -->
+<section id="nft" class="card">
+  <h2>14 · NFTs — ERC-721</h2>
+  <p>Each <strong>tokenId</strong> is unique and points to off-chain metadata (image, traits)
+     usually pinned on IPFS. Ownership is on-chain; the art lives elsewhere.</p>
+  <div class="controls">
+    Mint to:
+    <select id="nft-to"><option>Alice</option><option>Bob</option><option>Carol</option></select>
+    <button id="nft-mint" class="primary">mint()</button>
+    <button id="nft-reset">Reset</button>
+  </div>
+  <div id="nft-gallery" class="nft-gallery"></div>
+  <label>Tx log</label>
+  <div id="nft-log" class="log"></div>
+</section>
+
+<!-- AMM -->
+<section id="amm" class="card">
+  <h2>15 · Automated Market Maker (Uniswap V2)</h2>
+  <p>A constant-product market maker holds two assets and enforces
+     <code>x × y = k</code>. Big trades move the price more — that's
+     <strong>slippage</strong>. The 0.3% fee is added to the pool, paying the LPs.</p>
+  <div class="row">
+    <div class="col">
+      <label>Pool reserves</label>
+      <div class="account">
+        <div class="row2"><b>ETH</b><span id="amm-eth">100.0000</span></div>
+        <div class="row2"><b>USDC</b><span id="amm-usdc">200000.00</span></div>
+        <div class="row2"><b>price (USDC / ETH)</b><span id="amm-price">2000.00</span></div>
+        <div class="row2"><b>k = x · y</b><span id="amm-k">20 000 000</span></div>
+      </div>
+      <label class="mt">Buy ETH with USDC</label>
+      <input id="amm-amt" type="number" value="5000" step="500" />
+      <button id="amm-buy" class="primary">swap USDC → ETH</button>
+      <label class="mt">Sell ETH for USDC</label>
+      <input id="amm-amt-eth" type="number" value="2.5" step="0.5" />
+      <button id="amm-sell">swap ETH → USDC</button>
+      <button id="amm-reset">Reset pool</button>
+    </div>
+    <div class="col">
+      <label>Swap log (watch price impact grow with size)</label>
+      <div id="amm-log" class="log" style="max-height:380px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLLUPS -->
+<section id="rollups" class="card">
+  <h2>16 · Layer-2 rollups</h2>
+  <p>Rollups execute transactions off-chain and post only a <em>compressed state-root</em>
+     to L1, amortising one expensive L1 tx over hundreds of L2 txs.
+     <strong>Optimistic</strong> rollups assume validity and allow a 7-day fraud-proof window.
+     <strong>ZK</strong> rollups attach a zero-knowledge validity proof — finality is instant.</p>
+  <div class="controls">
+    <button id="rollup-submit" class="primary">Submit L2 tx</button>
+    <button id="rollup-flush-op">Post Optimistic batch to L1</button>
+    <button id="rollup-flush-zk">Post ZK batch to L1</button>
+    <button id="rollup-reset">Reset</button>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label>L2 mempool (cheap, fast)</label>
+      <div id="rollup-pending" class="rollup-pending"></div>
+    </div>
+    <div class="col">
+      <label>Posted to L1</label>
+      <div id="rollup-batches" class="rollup-batches"></div>
+    </div>
+  </div>
+  <label>Log</label>
+  <div id="rollup-log" class="log"></div>
+</section>
+
+<!-- HALVING -->
+<section id="halving" class="card">
+  <h2>17 · Bitcoin halving &amp; supply schedule</h2>
+  <p>Every <strong>210 000 blocks</strong> (~4 years) the coinbase reward halves.
+     The geometric series converges to the famous <strong>21 million BTC cap</strong>.</p>
+  <div class="row">
+    <div class="col">
+      <label>Block height
+        <input type="range" id="halving-height" min="0" max="1500000" step="1000" value="840000" />
+        <span id="halving-height-val">840 000</span>
+      </label>
+      <div class="account">
+        <div class="row2"><b>Era</b><span id="halving-era">4</span></div>
+        <div class="row2"><b>Block reward</b><span id="halving-reward">3.125 BTC</span></div>
+        <div class="row2"><b>Cumulative supply</b><span id="halving-supply">19 687 500 BTC</span></div>
+      </div>
+    </div>
+    <div class="col">
+      <label>Halving schedule</label>
+      <div id="halving-eras" class="halving-table"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSENSUS -->
+<section id="consensus" class="card">
+  <h2>13 · Consensus — Proof of Work vs Proof of Stake</h2>
+  <div class="row">
+    <div class="col">
+      <h3>Proof of Work</h3>
+      <ul>
+        <li>Security via wasted energy (hashing).</li>
+        <li>Bitcoin, pre-Merge Ethereum.</li>
+        <li>51% attack ≈ buy ½ the global hashrate.</li>
+        <li>Probabilistic finality (wait N confirmations).</li>
+      </ul>
+      <div class="bar"><div style="width:97%"></div></div>
+      <span class="meta">Energy footprint (relative)</span>
+    </div>
+    <div class="col">
+      <h3>Proof of Stake</h3>
+      <ul>
+        <li>Security via economic stake (slashing).</li>
+        <li>Ethereum (post-Merge, Sep 2022), Solana, Cardano.</li>
+        <li>Attack cost ≈ acquire ⅓–½ of staked ETH.</li>
+        <li>Near-instant finality (~12 min on ETH).</li>
+      </ul>
+      <div class="bar"><div style="width:1%"></div></div>
+      <span class="meta">Energy footprint (relative)</span>
+    </div>
+  </div>
+  <p class="note">Ethereum's "Merge" cut energy use by ~99.95% by swapping PoW for PoS in 2022.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>Built as a study companion to <em>Blockchain, Cryptocurrencies, and Fintech</em>.
+     Source &amp; PDFs: see the README in the repo.
+     All hashing &amp; signing runs locally in your browser — nothing is sent anywhere.</p>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
