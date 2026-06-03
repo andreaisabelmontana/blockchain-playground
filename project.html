@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Worked Example — Build &amp; Deploy a Token + Crowdfunding dApp</title>
+<meta name="description" content="An end-to-end worked example for Blockchain, Cryptocurrencies & Fintech (BCSAI, IE University): write an ERC-20 token and a crowdfunding/escrow smart contract in Solidity with safety patterns (checks-effects-interactions, access control, re-entrancy guard), build an ethers.js dApp front-end, deploy to a testnet, and analyze gas cost and security." />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---- project-page-only additions (reuse the shared palette) ---- */
+.crumbs{font-size:12px;color:var(--mute);margin:0 0 6px}
+.crumbs a{color:var(--accent2);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.lead{color:var(--mute);font-size:15px;max-width:78ch}
+.section-intro{color:var(--mute);max-width:82ch}
+.anchor-offset{scroll-margin-top:120px}
+
+/* meta grid (overview) */
+.metagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:16px}
+.metagrid .mcell{background:var(--tile);border:1px solid var(--line);border-radius:10px;padding:12px}
+.metagrid .mcell b{display:block;color:var(--mute);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.metagrid .mcell span{color:var(--ink);font-size:14px}
+
+/* stack chips */
+.stack-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.stack-chips .chip{background:var(--code);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12px;color:var(--accent2)}
+
+/* step / numbered flow */
+.steps{counter-reset:step;list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px}
+.steps li{counter-increment:step;position:relative;background:var(--code);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:12px 14px 12px 50px}
+.steps li::before{content:counter(step);position:absolute;left:12px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--panel2);border:1px solid var(--accent2);color:var(--accent);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--accent)}
+
+/* code listing block (Solidity / JS) */
+.listing{background:#0a0f24;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;margin:14px 0;overflow:hidden}
+.listing .lhead{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:linear-gradient(180deg,var(--panel2),var(--panel));border-bottom:1px solid var(--line)}
+.listing .lhead .fname{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent)}
+.listing .lhead .ltag{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);background:var(--code);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.listing pre{margin:0;padding:14px 16px;overflow-x:auto;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#cdeede;white-space:pre;background:var(--code)}
+.listing pre code{background:none;padding:0;color:inherit;display:block}
+
+/* concept / key idea / pitfall / connects boxes (mirror course.html) */
+.concept{background:var(--code);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:10px 12px;margin:10px 0}
+.concept .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);font-weight:600}
+.concept p{margin:4px 0 0;font-size:13px;color:var(--ink)}
+.concept code{background:var(--panel2);padding:1px 5px;border-radius:4px}
+
+.keyidea{background:#13251f;border:1px solid #1f4036;border-radius:8px;padding:10px 12px;margin:10px 0}
+.keyidea .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.keyidea p{margin:4px 0 0;font-size:13px;color:#cdeede}
+
+.pitfall{background:#2a1d12;border:1px solid #5a3a1f;border-left:4px solid var(--warn);border-radius:8px;padding:10px 12px;margin:10px 0}
+.pitfall .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--warn);font-weight:700}
+.pitfall p{margin:4px 0 0;font-size:13px;color:#f3dcc2}
+.pitfall code{background:#3a2716;padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace}
+
+.connects{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:9px 12px;margin:10px 0}
+.connects .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);font-weight:600}
+.connects p{margin:4px 0 0;font-size:13px;color:var(--ink)}
+
+/* generic prose code */
+main p code,main li code,main td code{background:var(--code);border:1px solid var(--line);padding:1px 5px;border-radius:4px;color:#aef0c8}
+
+/* architecture diagram */
+.arch{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;margin:14px 0}
+.arch pre{margin:0;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cdd9ff;white-space:pre}
+
+/* event/function tables */
+.ftable{width:100%;border-collapse:collapse;margin:12px 0 0;font-size:13px}
+.ftable th,.ftable td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ftable th{background:var(--panel2);color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.ftable td{color:var(--ink)}
+.ftable td:first-child{color:var(--accent2);font-weight:600;white-space:nowrap;font-family:ui-monospace,monospace}
+.ftable code{background:var(--panel2);padding:1px 4px;border-radius:4px}
+
+/* outcomes mapping */
+.outcomes{margin:10px 0 0;padding:12px 14px;background:var(--code);border:1px solid var(--line);border-radius:8px}
+.outcomes b{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.outcomes ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--ink)}
+.outcomes ul li{margin:4px 0}
+
+/* playlinks (cross-links, mirror course.html) */
+.playlinks{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.playlinks a{font-size:11px;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--accent2)}
+.playlinks a:hover{border-color:var(--accent);color:var(--accent)}
+.playlinks .plabel{font-size:11px;color:var(--mute);align-self:center;margin-right:2px}
+
+/* references */
+.refs{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px}
+.refs li{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.refs .rt{color:var(--ink);font-weight:600}
+.refs .rd{color:var(--mute);font-size:13px;margin-top:3px}
+
+/* extension cards */
+.extgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:14px 0 0}
+.extcard{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px}
+.extcard h4{margin:0 0 6px;color:var(--accent);font-size:15px}
+.extcard p{margin:0;color:var(--mute);font-size:13px}
+
+/* mini table of contents */
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:16px}
+.toc a{background:var(--tile);border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:3px;transition:transform .15s,border-color .15s}
+.toc a:hover{transform:translateY(-2px);border-color:var(--accent)}
+.toc a b{color:var(--accent)}
+.toc a span{color:var(--mute);font-size:13px}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⛓</span>
+    <div>
+      <h1>Worked Example · Token + Crowdfunding dApp</h1>
+      <p class="subtitle">A full build-and-deploy walkthrough — Solidity contracts, an ethers.js front-end, a testnet deploy, and a gas + security analysis.</p>
+    </div>
+  </div>
+  <nav class="sessions">
+    <a href="./index.html">← Playground</a>
+    <a href="./course.html">Course outline</a>
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#token">ERC-20 token</a>
+    <a href="#campaign">Crowdfunding</a>
+    <a href="#frontend">dApp front-end</a>
+    <a href="#deploy">Deploy &amp; test</a>
+    <a href="#security">Gas &amp; security</a>
+    <a href="#outcomes">Outcomes</a>
+    <a href="#extensions">Extensions</a>
+    <a href="#references">References</a>
+    <a href="./SYLLABUS.pdf">PDF syllabus ↧</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- OVERVIEW -->
+<section id="overview" class="card hero anchor-offset">
+  <p class="crumbs"><a href="./index.html">Interactive playground</a> · <a href="./course.html">Course structure</a> · Worked example project</p>
+  <h2>Build &amp; deploy a token + crowdfunding dApp</h2>
+  <p class="lead">This page is a single, in-depth <strong>worked example</strong> that stitches the whole back half of the course into one shippable project. You will write a real <strong>ERC-20 token</strong> in Solidity, a <strong>crowdfunding / escrow</strong> contract that holds contributors' funds and releases them only when a goal is met (refunding everyone otherwise), a small <strong>ethers.js</strong> front-end that connects a wallet and reads/writes the contracts, and then deploy to a public testnet and analyse the result for <strong>gas cost</strong> and <strong>security</strong>. Every line of Solidity and JavaScript below is real and compiles on <code>solc 0.8.x</code> / <code>ethers v6</code>; the explanations call out the mechanics — hashing, gas, the ERC-20 interface, and the re-entrancy class of bug — as we go.</p>
+
+  <div class="metagrid">
+    <div class="mcell"><b>Project goal</b><span>A funded campaign that escrows ETH and pays contributors back in a reward token</span></div>
+    <div class="mcell"><b>Stack</b><span>Solidity 0.8.24 · ethers.js v6 · Remix / Hardhat</span></div>
+    <div class="mcell"><b>Network</b><span>Sepolia testnet (free faucet ETH)</span></div>
+    <div class="mcell"><b>Contracts</b><span>RewardToken (ERC-20) + Crowdfund (escrow)</span></div>
+    <div class="mcell"><b>Sessions exercised</b><span>S2 (hashing), S6–7 (Solidity), S8–9 (Dapps), S10–11 (Web3)</span></div>
+    <div class="mcell"><b>Maps to</b><span>50% "intermediate exercises" component</span></div>
+    <div class="mcell"><b>Difficulty</b><span>Intermediate — assumes S6 Solidity basics</span></div>
+    <div class="mcell"><b>Est. time</b><span>4–6 hours end-to-end</span></div>
+  </div>
+
+  <div class="stack-chips">
+    <span class="chip">Solidity ^0.8.24</span>
+    <span class="chip">ERC-20</span>
+    <span class="chip">checks-effects-interactions</span>
+    <span class="chip">re-entrancy guard</span>
+    <span class="chip">access control</span>
+    <span class="chip">events &amp; logs</span>
+    <span class="chip">ethers.js v6</span>
+    <span class="chip">MetaMask / EIP-1193</span>
+    <span class="chip">Sepolia testnet</span>
+    <span class="chip">gas profiling</span>
+  </div>
+
+  <h3 style="margin-top:22px">What you'll build, section by section</h3>
+  <div class="toc">
+    <a href="#architecture"><b>1 · Architecture</b><span>Two contracts, who calls whom, the events emitted</span></a>
+    <a href="#token"><b>2 · ERC-20 token</b><span>The six-function standard, written from scratch</span></a>
+    <a href="#campaign"><b>3 · Crowdfunding/escrow</b><span>contribute / withdraw / refund + modifiers</span></a>
+    <a href="#frontend"><b>4 · dApp front-end</b><span>Wallet connect, read views, write txs with ethers.js</span></a>
+    <a href="#deploy"><b>5 · Deploy &amp; test</b><span>Remix and Hardhat paths to Sepolia</span></a>
+    <a href="#security"><b>6 · Gas &amp; security</b><span>Re-entrancy, CEI, overflow, gas table</span></a>
+    <a href="#outcomes"><b>7 · Learning outcomes</b><span>How each piece maps to the syllabus</span></a>
+    <a href="#extensions"><b>8 · Extensions</b><span>NFT rewards, DAO governance, price oracles</span></a>
+  </div>
+
+  <div class="connects"><span class="clabel">Why this project</span>
+    <p>The syllabus asks you to "program and simulate custom programs (i.e. smart contracts) for currency"
+       and to "build a DAO, deploy it on a public blockchain, and interface with it through a Dapp". A
+       crowdfunding escrow plus its reward token is the smallest project that genuinely exercises all of
+       that: a fungible currency (the token), conditional value transfer with custody (the escrow), the
+       safety patterns that separate toy code from deployable code, and a browser front-end that talks to a
+       live chain. It is also a direct on-ramp to the DAO material in Sessions 8–9 — a DAO is essentially
+       this contract with voting bolted on.</p>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" class="card anchor-offset">
+  <h2>1 · Architecture</h2>
+  <p class="section-intro">The system is two contracts and one web page. The <strong>Crowdfund</strong>
+     contract is the heart of it: contributors send ETH while a campaign is open; if the goal is reached by
+     the deadline the beneficiary can withdraw the pot, and every contributor is minted
+     <strong>RewardToken</strong> proportional to what they put in; if the goal is missed, contributors pull
+     their ETH back themselves. The front-end never holds keys or funds — it just encodes calls and lets the
+     user's wallet sign them.</p>
+
+  <div class="arch"><pre>            ┌─────────────────────── Browser (dApp) ───────────────────────┐
+            │  index/project page  +  ethers.js v6  +  MetaMask (EIP-1193)  │
+            └───────────────┬───────────────────────────────┬──────────────┘
+                            │ read  (eth_call, free)         │ write (eth_sendTransaction, costs gas)
+                            ▼                                 ▼
+        ┌───────────────────────────────┐        signs &amp; broadcasts tx
+        │   Sepolia testnet node (RPC)   │◀───────────────────────────────
+        └───────────────┬───────────────┘
+                        │ EVM execution
+        ┌───────────────▼───────────────────────────────────────────────┐
+        │  Crowdfund (escrow)                                            │
+        │    state: goal, deadline, beneficiary, totalRaised,            │
+        │           contributions[addr], claimed, token                 │
+        │    contribute() payable ── records ETH, emits Contributed      │
+        │    withdraw()   ───────── goal met → pays beneficiary          │
+        │    refund()     ───────── goal missed → returns contributor ETH│
+        │    claimReward() ──────── mints RewardToken to contributor     │
+        └───────────────┬───────────────────────────────────────────────┘
+                        │ calls mint()
+        ┌───────────────▼───────────────────────────────────────────────┐
+        │  RewardToken (ERC-20)                                          │
+        │    balanceOf / transfer / approve / transferFrom / allowance   │
+        │    mint() (only the Crowdfund, set as minter)                  │
+        └────────────────────────────────────────────────────────────────┘</pre></div>
+
+  <h3 style="margin-top:18px">Events the contracts emit</h3>
+  <p class="section-intro">Events are the contract's append-only log. They cost far less gas than storage,
+     are not readable by other contracts, and are exactly what a front-end or an indexer (The Graph, a block
+     explorer) subscribes to in order to react to on-chain activity in real time.</p>
+  <table class="ftable">
+    <thead><tr><th>Event</th><th>Emitted by</th><th>Why the dApp cares</th></tr></thead>
+    <tbody>
+      <tr><td>Contributed</td><td><code>contribute()</code></td><td>Update the progress bar and the contributor's running total.</td></tr>
+      <tr><td>Withdrawn</td><td><code>withdraw()</code></td><td>Mark the campaign as successfully closed; hide the contribute button.</td></tr>
+      <tr><td>Refunded</td><td><code>refund()</code></td><td>Confirm a contributor got their ETH back after a failed campaign.</td></tr>
+      <tr><td>Transfer</td><td>ERC-20 <code>transfer</code>/<code>mint</code></td><td>The standard token event — wallets and explorers track balances from it.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="concept"><span class="clabel">Core concept · separation of concerns</span>
+    <p>Keeping the <strong>token</strong> and the <strong>escrow</strong> in separate contracts is deliberate.
+       The token is a reusable, standard-conformant asset that any wallet or exchange understands; the escrow
+       is application logic that <em>uses</em> the token. This is the same modularity that lets the same
+       USDC contract back hundreds of unrelated DeFi apps.</p>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#erc20">ERC-20 transfer/approve/transferFrom</a>
+    <a href="./index.html#accounts">EOA vs contract accounts</a>
+    <a href="./index.html#solidity">Deploy &amp; call a contract</a>
+    <a href="./course.html#mod-ethereum">Course: Module C (Ethereum)</a>
+  </div>
+</section>
+
+<!-- ERC-20 TOKEN -->
+<section id="token" class="card anchor-offset">
+  <h2>2 · The ERC-20 token contract</h2>
+  <p class="section-intro">ERC-20 is an <em>interface</em>: a set of six functions and two events that every
+     fungible token must expose so that wallets, exchanges and other contracts can treat all tokens uniformly.
+     The two non-obvious ones — <code>approve</code> and <code>transferFrom</code> — implement a
+     <strong>delegated allowance</strong>: you grant a contract permission to pull up to <em>N</em> tokens
+     from you, and it later pulls them with <code>transferFrom</code>. That two-step "approve then pull" is
+     what every DEX and lending protocol relies on.</p>
+
+  <div class="concept"><span class="clabel">Core concept · the ERC-20 interface</span>
+    <p><code>totalSupply()</code>, <code>balanceOf(addr)</code>, <code>transfer(to, amt)</code>,
+       <code>approve(spender, amt)</code>, <code>allowance(owner, spender)</code>,
+       <code>transferFrom(from, to, amt)</code> — plus the <code>Transfer</code> and <code>Approval</code>
+       events. Balances are just a <code>mapping(address =&gt; uint256)</code>; "sending" a token is
+       decrementing one entry and incrementing another. Nothing leaves the contract.</p>
+  </div>
+
+  <p class="section-intro">Here is a complete, self-contained implementation. It is written without external
+     libraries so you can read every line, but it follows the same logic as OpenZeppelin's audited version
+     (which you would use in production — see the pitfall below). Note <code>unchecked</code> blocks: under
+     Solidity 0.8 every arithmetic operation reverts on overflow by default, so we only drop that guard where
+     a preceding <code>require</code> has already proven it is safe, saving gas.</p>
+
+  <div class="listing">
+    <div class="lhead"><span class="fname">RewardToken.sol</span><span class="ltag">Solidity</span></div>
+<pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+/// @title RewardToken — a minimal, safe ERC-20 with controlled minting.
+/// @notice Balances live in a mapping; "transferring" is just editing two entries.
+contract RewardToken {
+    string public constant name     = "Campaign Reward";
+    string public constant symbol   = "CRS";
+    uint8  public constant decimals = 18;          // 1 token = 1e18 base units
+
+    uint256 public totalSupply;
+    address public minter;                         // the Crowdfund contract
+
+    mapping(address =&gt; uint256) public balanceOf;
+    mapping(address =&gt; mapping(address =&gt; uint256)) public allowance;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    error NotMinter();
+    error InsufficientBalance();
+    error InsufficientAllowance();
+
+    constructor(address minter_) {
+        minter = minter_;                          // only this address may mint
+    }
+
+    /// @notice Mint new tokens. Restricted to the campaign contract.
+    function mint(address to, uint256 amount) external {
+        if (msg.sender != minter) revert NotMinter();
+        totalSupply += amount;                     // 0.8.x reverts on overflow
+        unchecked { balanceOf[to] += amount; }     // safe: bounded by totalSupply
+        emit Transfer(address(0), to, amount);     // mint = transfer from the zero address
+    }
+
+    /// @notice Move `amount` of your own tokens to `to`.
+    function transfer(address to, uint256 amount) external returns (bool) {
+        return _transfer(msg.sender, to, amount);
+    }
+
+    /// @notice Approve `spender` to pull up to `amount` of your tokens.
+    function approve(address spender, uint256 amount) external returns (bool) {
+        allowance[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    /// @notice Pull `amount` from `from` to `to`, spending the caller's allowance.
+    function transferFrom(address from, address to, uint256 amount) external returns (bool) {
+        uint256 allowed = allowance[from][msg.sender];
+        if (allowed &lt; amount) revert InsufficientAllowance();
+        if (allowed != type(uint256).max) {        // infinite approval = no decrement
+            allowance[from][msg.sender] = allowed - amount;
+        }
+        return _transfer(from, to, amount);
+    }
+
+    function _transfer(address from, address to, uint256 amount) internal returns (bool) {
+        uint256 bal = balanceOf[from];
+        if (bal &lt; amount) revert InsufficientBalance();
+        unchecked {
+            balanceOf[from] = bal - amount;        // safe: checked bal &gt;= amount above
+            balanceOf[to]  += amount;              // safe: total supply is the ceiling
+        }
+        emit Transfer(from, to, amount);
+        return true;
+    }
+}</code></pre>
+  </div>
+
+  <h3 style="margin-top:18px">Walkthrough</h3>
+  <ul class="steps">
+    <li><b>State is two mappings.</b> <code>balanceOf</code> tracks who owns what; the nested
+        <code>allowance</code> mapping tracks "owner → spender → how much the spender may pull". Reads of
+        public mappings are free (they generate auto getters); writes cost gas because they touch storage.</li>
+    <li><b>Minting is a transfer from address(0).</b> By convention, creating tokens emits
+        <code>Transfer(address(0), to, amount)</code>. Block explorers and wallets recognise that pattern as
+        a mint and credit the balance accordingly — you get correct UI for free by following the standard.</li>
+    <li><b>Access control on <code>mint</code>.</b> Only the stored <code>minter</code> (our Crowdfund
+        contract) may create tokens. Everyone else reverts with <code>NotMinter()</code>. This is the
+        simplest form of role-based access control; OpenZeppelin's <code>Ownable</code>/<code>AccessControl</code>
+        generalise it.</li>
+    <li><b>Allowance + transferFrom.</b> A spender (e.g. a DEX) calls <code>transferFrom</code> and we
+        decrement their allowance unless it was set to the sentinel "infinite" value. This avoids one storage
+        write per pull for tokens that are approved once for an unlimited amount.</li>
+    <li><b>Custom errors over revert strings.</b> <code>revert NotMinter()</code> is cheaper than
+        <code>require(..., "not minter")</code> because the four-byte selector replaces a string in calldata —
+        a small but standard 0.8.x gas optimisation.</li>
+  </ul>
+
+  <div class="pitfall"><span class="clabel">Common pitfall · don't ship hand-rolled tokens</span>
+    <p>This contract is written by hand so you can <em>see</em> the mechanics, and it is correct — but in
+       production you should inherit OpenZeppelin's audited <code>ERC20</code> and <code>Ownable</code>. Subtle
+       bugs (the classic <code>approve</code> race condition, missing zero-address checks, decimals
+       assumptions) have drained real money from naive re-implementations. Read the standard, then stand on
+       the shoulders of audited code.</p>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#erc20">ERC-20 playground</a>
+    <a href="./course.html#mod-ethereum">Course: Solidity (S7)</a>
+  </div>
+</section>
+
+<!-- CROWDFUNDING / ESCROW -->
+<section id="campaign" class="card anchor-offset">
+  <h2>3 · The crowdfunding / escrow contract</h2>
+  <p class="section-intro">This is the application. It holds ETH in escrow while a campaign runs, then
+     branches on the outcome: <strong>goal met</strong> → the beneficiary withdraws and contributors can
+     claim reward tokens; <strong>goal missed</strong> → contributors pull their ETH back. The interesting
+     engineering is not the happy path — it's making the money-moving functions safe against re-entrancy and
+     impossible to call out of order. We use <em>modifiers</em> for the ordering rules and the
+     <strong>checks-effects-interactions</strong> pattern for the value transfers.</p>
+
+  <div class="concept"><span class="clabel">Core concept · checks-effects-interactions (CEI)</span>
+    <p>Order every state-changing function as: <strong>(1) checks</strong> — validate inputs and require
+       conditions; <strong>(2) effects</strong> — update <em>this</em> contract's storage; <strong>(3)
+       interactions</strong> — only now call out to other addresses (send ETH, call another contract).
+       Because storage is already settled before the external call, a malicious callee that re-enters finds
+       nothing left to drain. CEI is the single most important Solidity safety habit.</p>
+  </div>
+
+  <div class="listing">
+    <div class="lhead"><span class="fname">Crowdfund.sol</span><span class="ltag">Solidity</span></div>
+<pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+interface IRewardToken {
+    function mint(address to, uint256 amount) external;
+}
+
+/// @title Crowdfund — a goal-or-refund escrow that rewards contributors with a token.
+contract Crowdfund {
+    address public immutable beneficiary;   // who receives funds if the goal is met
+    uint256 public immutable goal;          // target in wei
+    uint256 public immutable deadline;      // unix timestamp
+    IRewardToken public immutable token;    // reward token (this contract is its minter)
+
+    uint256 public totalRaised;
+    bool    public withdrawn;               // beneficiary has been paid
+    mapping(address =&gt; uint256) public contributions;
+    mapping(address =&gt; bool)    public rewardClaimed;
+
+    // --- re-entrancy guard (the OpenZeppelin nonReentrant pattern) ---
+    uint256 private _locked = 1;            // 1 = unlocked, 2 = locked
+    modifier nonReentrant() {
+        require(_locked == 1, "reentrancy");
+        _locked = 2;
+        _;
+        _locked = 1;
+    }
+
+    event Contributed(address indexed who, uint256 amount, uint256 newTotal);
+    event Withdrawn(address indexed beneficiary, uint256 amount);
+    event Refunded(address indexed who, uint256 amount);
+    event RewardClaimed(address indexed who, uint256 tokens);
+
+    modifier campaignOpen() {
+        require(block.timestamp &lt; deadline, "campaign ended");
+        _;
+    }
+    modifier campaignEnded() {
+        require(block.timestamp &gt;= deadline, "campaign still open");
+        _;
+    }
+
+    constructor(address beneficiary_, uint256 goalWei, uint256 durationSecs, address token_) {
+        require(beneficiary_ != address(0), "zero beneficiary");
+        require(goalWei &gt; 0, "zero goal");
+        beneficiary = beneficiary_;
+        goal        = goalWei;
+        deadline    = block.timestamp + durationSecs;
+        token       = IRewardToken(token_);
+    }
+
+    /// @notice Contribute ETH while the campaign is open.
+    function contribute() external payable campaignOpen {
+        require(msg.value &gt; 0, "no value");
+        contributions[msg.sender] += msg.value;     // effect
+        totalRaised               += msg.value;     // effect
+        emit Contributed(msg.sender, msg.value, totalRaised);
+    }
+
+    /// @notice Beneficiary withdraws once the goal is met (after the deadline).
+    function withdraw() external campaignEnded nonReentrant {
+        require(msg.sender == beneficiary, "not beneficiary");   // check
+        require(totalRaised &gt;= goal, "goal not met");            // check
+        require(!withdrawn, "already withdrawn");                // check
+        withdrawn = true;                                        // effect (before the call!)
+        uint256 amount = address(this).balance;
+        (bool ok, ) = beneficiary.call{value: amount}("");       // interaction
+        require(ok, "transfer failed");
+        emit Withdrawn(beneficiary, amount);
+    }
+
+    /// @notice Contributors pull their ETH back if the goal was missed.
+    function refund() external campaignEnded nonReentrant {
+        require(totalRaised &lt; goal, "goal was met");             // check
+        uint256 amount = contributions[msg.sender];              // check
+        require(amount &gt; 0, "nothing to refund");                // check
+        contributions[msg.sender] = 0;                           // EFFECT before interaction
+        (bool ok, ) = msg.sender.call{value: amount}("");        // interaction
+        require(ok, "refund failed");
+        emit Refunded(msg.sender, amount);
+    }
+
+    /// @notice Successful contributors claim reward tokens 1:1 with wei contributed.
+    function claimReward() external campaignEnded {
+        require(totalRaised &gt;= goal, "campaign failed");         // check
+        require(!rewardClaimed[msg.sender], "already claimed");  // check
+        uint256 amount = contributions[msg.sender];              // check
+        require(amount &gt; 0, "not a contributor");                // check
+        rewardClaimed[msg.sender] = true;                        // effect
+        token.mint(msg.sender, amount);                          // interaction (trusted token)
+        emit RewardClaimed(msg.sender, amount);
+    }
+}</code></pre>
+  </div>
+
+  <h3 style="margin-top:18px">Function-by-function</h3>
+  <table class="ftable">
+    <thead><tr><th>Function</th><th>Guards</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>contribute</td><td><code>campaignOpen</code>, payable</td><td>Records the sent ETH against the sender and the running total, then logs it. State-only — no external call, so no re-entrancy surface.</td></tr>
+      <tr><td>withdraw</td><td><code>campaignEnded</code>, <code>nonReentrant</code></td><td>Beneficiary-only; requires the goal met; flips <code>withdrawn</code> <em>before</em> sending, then transfers the whole balance via low-level <code>call</code>.</td></tr>
+      <tr><td>refund</td><td><code>campaignEnded</code>, <code>nonReentrant</code></td><td>Only when the goal was missed; zeroes the contributor's record <em>before</em> sending ETH back — textbook CEI.</td></tr>
+      <tr><td>claimReward</td><td><code>campaignEnded</code></td><td>On success, mints reward tokens 1:1 with wei contributed; the <code>rewardClaimed</code> flag prevents double-claims.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="keyidea"><span class="clabel">Key idea · the pull-over-push refund</span>
+    <p>Notice we never loop over contributors to push refunds — that would run out of gas with many
+       contributors and let one reverting recipient block everyone. Instead each contributor
+       <em>pulls</em> their own refund. "Favor pull over push" is a core smart-contract design rule.</p>
+  </div>
+
+  <div class="pitfall"><span class="clabel">Common pitfall · <code>block.timestamp</code> is loosely trusted</span>
+    <p>Validators can nudge <code>block.timestamp</code> by a few seconds. For a multi-day crowdfunding
+       deadline that is harmless, but never use it as a randomness source or for sub-minute timing-critical
+       logic. Here the deadline tolerance is far larger than any manipulation, so it's fine.</p>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#solidity">Deploy &amp; call a contract</a>
+    <a href="./index.html#accounts">Contract account state</a>
+    <a href="./course.html#mod-daos">Course: DAOs &amp; Dapps (S8–9)</a>
+  </div>
+</section>
+
+<!-- DAPP FRONT-END -->
+<section id="frontend" class="card anchor-offset">
+  <h2>4 · The dApp front-end (ethers.js)</h2>
+  <p class="section-intro">A dApp front-end is an ordinary web page that talks to the chain through the
+     user's wallet. It does two kinds of work: <strong>reads</strong> (call <code>view</code> functions —
+     free, no signature) and <strong>writes</strong> (send transactions — the wallet pops up, the user signs,
+     gas is paid). With ethers.js v6 you wrap the injected <code>window.ethereum</code> provider in a
+     <code>BrowserProvider</code>, get a <code>Signer</code> for writes, and instantiate a
+     <code>Contract</code> from its ABI and address.</p>
+
+  <div class="concept"><span class="clabel">Core concept · provider vs signer</span>
+    <p>A <strong>provider</strong> is a read-only connection to the chain (it can call <code>view</code>
+       functions and read logs). A <strong>signer</strong> is a provider plus the ability to authorise
+       transactions with a private key — in the browser that key lives in MetaMask, never in your page.
+       Reads use the provider; writes use the signer.</p>
+  </div>
+
+  <div class="listing">
+    <div class="lhead"><span class="fname">app.js</span><span class="ltag">JavaScript · ethers v6</span></div>
+<pre><code>import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.13.0/+esm";
+
+// Minimal ABI — only the members the dApp actually uses.
+const CROWDFUND_ABI = [
+  "function goal() view returns (uint256)",
+  "function deadline() view returns (uint256)",
+  "function totalRaised() view returns (uint256)",
+  "function contributions(address) view returns (uint256)",
+  "function withdrawn() view returns (bool)",
+  "function contribute() payable",
+  "function withdraw()",
+  "function refund()",
+  "function claimReward()",
+  "event Contributed(address indexed who, uint256 amount, uint256 newTotal)"
+];
+
+const CROWDFUND_ADDRESS = "0xYourDeployedCrowdfundAddressHere";
+
+let provider, signer, contract;
+
+// 1) Connect the wallet (EIP-1193 handshake).
+async function connect() {
+  if (!window.ethereum) { alert("Install MetaMask"); return; }
+  provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);   // prompts the wallet
+  signer   = await provider.getSigner();
+  contract = new ethers.Contract(CROWDFUND_ADDRESS, CROWDFUND_ABI, signer);
+  document.getElementById("addr").textContent = await signer.getAddress();
+  await refresh();
+  subscribe();
+}
+
+// 2) READ — view calls are free and need no signature.
+async function refresh() {
+  const [goal, raised, deadline, withdrawn] = await Promise.all([
+    contract.goal(),
+    contract.totalRaised(),
+    contract.deadline(),
+    contract.withdrawn()
+  ]);
+  const pct = goal === 0n ? 0 : Number((raised * 100n) / goal);
+  document.getElementById("raised").textContent =
+    `${ethers.formatEther(raised)} / ${ethers.formatEther(goal)} ETH  (${pct}%)`;
+  const ended = BigInt(Math.floor(Date.now() / 1000)) >= deadline;
+  document.getElementById("status").textContent =
+    withdrawn ? "funded &amp; withdrawn" : ended ? "ended" : "open";
+}
+
+// 3) WRITE — send a transaction; the wallet signs, we pay gas, then wait for mining.
+async function contribute(ethAmount) {
+  const tx = await contract.contribute({ value: ethers.parseEther(ethAmount) });
+  document.getElementById("status").textContent = "pending: " + tx.hash;
+  const receipt = await tx.wait();                  // 1 confirmation
+  console.log("mined in block", receipt.blockNumber, "gas used", receipt.gasUsed);
+  await refresh();
+}
+
+async function refund()      { await (await contract.refund()).wait();      refresh(); }
+async function claimReward() { await (await contract.claimReward()).wait(); refresh(); }
+
+// 4) React to on-chain events in real time (this is why we emit them).
+function subscribe() {
+  contract.on("Contributed", (who, amount, newTotal) => {
+    console.log(`${who} added ${ethers.formatEther(amount)} ETH`);
+    refresh();
+  });
+}
+
+document.getElementById("connect").addEventListener("click", connect);
+document.getElementById("give").addEventListener("click", () =>
+  contribute(document.getElementById("amount").value)
+);</code></pre>
+  </div>
+
+  <h3 style="margin-top:18px">What's happening</h3>
+  <ul class="steps">
+    <li><b>The ABI is the contract's API.</b> ethers only needs the signatures of the functions you call —
+        a human-readable string array is enough. The compiler also emits a full JSON ABI you can import
+        instead.</li>
+    <li><b>Reads via <code>Promise.all</code>.</b> View calls hit the node's <code>eth_call</code>, return
+        instantly and cost no gas. We batch four of them in parallel.</li>
+    <li><b>Writes return a tx, then you <code>await tx.wait()</code>.</b> The first await resolves when the
+        wallet broadcasts (you have a hash); the second resolves when it's mined (you have a receipt with
+        <code>gasUsed</code>). BigInt math (<code>0n</code>, <code>100n</code>) is mandatory — token amounts
+        overflow JS numbers.</li>
+    <li><b><code>parseEther</code> / <code>formatEther</code>.</b> The chain works in wei (1 ETH = 10¹⁸ wei).
+        These helpers convert to and from human units so you never hand-count eighteen zeros.</li>
+    <li><b>Event subscription.</b> <code>contract.on("Contributed", ...)</code> is why the contract emits
+        events: the UI updates the moment anyone contributes, without polling.</li>
+  </ul>
+
+  <div class="pitfall"><span class="clabel">Common pitfall · never trust the front-end for security</span>
+    <p>The page can hide a button, but anyone can call your contract directly with the same ABI. <em>All</em>
+       access control and validation must live in Solidity (the <code>require</code>s and modifiers above).
+       The front-end is convenience, not a security boundary.</p>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#wallet">Wallets &amp; addresses</a>
+    <a href="./index.html#gas">Gas &amp; fee calculator</a>
+    <a href="./course.html#mod-daos">Course: Building Dapps (S9)</a>
+  </div>
+</section>
+
+<!-- DEPLOY & TEST -->
+<section id="deploy" class="card anchor-offset">
+  <h2>5 · Deploy &amp; test</h2>
+  <p class="section-intro">You can deploy either in the browser with <strong>Remix</strong> (zero setup,
+     great for a first deploy) or from the command line with <strong>Hardhat</strong> (scriptable,
+     testable, what you'd use for the real exercise). Both target the <strong>Sepolia</strong> testnet, where
+     ETH is free from a faucet — never deploy unfinished code to mainnet.</p>
+
+  <h3>Path A · Remix (fastest)</h3>
+  <ul class="steps">
+    <li><b>Open <code>remix.ethereum.org</code></b> and paste both <code>.sol</code> files.</li>
+    <li><b>Compile</b> with solc 0.8.24 (Solidity Compiler tab → Compile).</li>
+    <li><b>Deploy the token first.</b> In the Deploy tab choose "Injected Provider — MetaMask", select
+        Sepolia, and deploy <code>RewardToken</code> with the <em>future</em> Crowdfund address — or deploy
+        the Crowdfund first and call a one-time <code>setMinter</code> (see ordering note below).</li>
+    <li><b>Deploy <code>Crowdfund</code></b> passing <code>(beneficiary, goalWei, durationSecs, tokenAddr)</code>.</li>
+    <li><b>Interact</b> from Remix's auto-generated UI or your dApp page — call <code>contribute</code> with
+        a "Value" in wei, watch the events in the terminal.</li>
+  </ul>
+
+  <div class="pitfall"><span class="clabel">Deployment ordering · the chicken-and-egg</span>
+    <p>The token's <code>minter</code> must be the Crowdfund, but the Crowdfund's constructor needs the
+       token address — a circular dependency. The clean fix is to make the token's minter settable once:
+       deploy the token with <code>minter = deployer</code>, deploy the Crowdfund with the token address,
+       then call <code>token.setMinter(crowdfundAddr)</code> and renounce. (Add a guarded
+       <code>setMinter</code> for this; it's a two-line change to the listing above.)</p>
+  </div>
+
+  <h3 style="margin-top:18px">Path B · Hardhat (scriptable + tested)</h3>
+  <div class="listing">
+    <div class="lhead"><span class="fname">scripts/deploy.js</span><span class="ltag">JavaScript · Hardhat</span></div>
+<pre><code>const { ethers } = require("hardhat");
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+
+  // 1) Deploy the token with the deployer as temporary minter.
+  const Token = await ethers.getContractFactory("RewardToken");
+  const token = await Token.deploy(deployer.address);
+  await token.waitForDeployment();
+
+  // 2) Deploy the campaign: goal 10 ETH, 7-day window.
+  const goal     = ethers.parseEther("10");
+  const duration = 7 * 24 * 60 * 60;
+  const Crowdfund = await ethers.getContractFactory("Crowdfund");
+  const cf = await Crowdfund.deploy(
+    deployer.address, goal, duration, await token.getAddress()
+  );
+  await cf.waitForDeployment();
+
+  // 3) Hand minting rights to the campaign.
+  await (await token.setMinter(await cf.getAddress())).wait();
+
+  console.log("Token:    ", await token.getAddress());
+  console.log("Crowdfund:", await cf.getAddress());
+}
+
+main().catch((e) => { console.error(e); process.exit(1); });</code></pre>
+  </div>
+
+  <p class="section-intro">Run it against Sepolia with an RPC URL and a funded test key in your
+     <code>hardhat.config.js</code>:</p>
+  <div class="listing">
+    <div class="lhead"><span class="fname">terminal</span><span class="ltag">shell</span></div>
+<pre><code>npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+npx hardhat test                       # run the unit tests below first
+npx hardhat run scripts/deploy.js --network sepolia
+npx hardhat verify --network sepolia &lt;address&gt; &lt;constructor args&gt;</code></pre>
+  </div>
+
+  <p class="section-intro">A test is where you prove the safety properties actually hold. The key one for
+     this project: a failed campaign must let contributors recover their ETH and must block withdrawal.</p>
+  <div class="listing">
+    <div class="lhead"><span class="fname">test/Crowdfund.test.js</span><span class="ltag">JavaScript · Mocha/Chai</span></div>
+<pre><code>const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
+
+describe("Crowdfund", () => {
+  it("refunds contributors when the goal is missed", async () => {
+    const [owner, alice] = await ethers.getSigners();
+    const Token = await ethers.getContractFactory("RewardToken");
+    const token = await Token.deploy(owner.address);
+    const Crowdfund = await ethers.getContractFactory("Crowdfund");
+    const cf = await Crowdfund.deploy(
+      owner.address, ethers.parseEther("10"), 3600, await token.getAddress()
+    );
+
+    await cf.connect(alice).contribute({ value: ethers.parseEther("1") });
+    await time.increase(3601);                       // jump past the deadline
+
+    await expect(cf.withdraw()).to.be.revertedWith("goal not met");
+    await expect(cf.connect(alice).refund())
+      .to.emit(cf, "Refunded")
+      .withArgs(alice.address, ethers.parseEther("1"));
+  });
+});</code></pre>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#solidity">Deploy &amp; call (simulated)</a>
+    <a href="./index.html#gas">Estimate the deploy gas</a>
+  </div>
+</section>
+
+<!-- GAS & SECURITY -->
+<section id="security" class="card anchor-offset">
+  <h2>6 · Gas &amp; security analysis</h2>
+  <p class="section-intro">Two questions decide whether a contract is production-ready: <em>what does it cost
+     to use?</em> and <em>can it be drained?</em> This section profiles the gas of each function and walks
+     through the security properties — re-entrancy, the checks-effects-interactions ordering, and integer
+     overflow — that the code above is built to satisfy.</p>
+
+  <h3>Gas profile</h3>
+  <p class="section-intro">Gas is the EVM's unit of computational work; the fee you pay is
+     <code>gasUsed × gasPrice</code>. Storage writes dominate: a fresh <code>SSTORE</code> (zero → non-zero)
+     is ~20,000 gas, an update ~5,000, and refunds are given for clearing storage. The figures below are
+     representative for this contract on the EVM.</p>
+  <table class="ftable">
+    <thead><tr><th>Operation</th><th>~Gas</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>deploy RewardToken</td><td>~700,000</td><td>One-off: stores the bytecode on-chain.</td></tr>
+      <tr><td>deploy Crowdfund</td><td>~900,000</td><td>One-off: larger bytecode + immutables in code.</td></tr>
+      <tr><td>contribute (first)</td><td>~70,000</td><td>Two fresh <code>SSTORE</code>s (contribution + total) + event.</td></tr>
+      <tr><td>contribute (repeat)</td><td>~30,000</td><td>Both slots already non-zero → cheaper updates.</td></tr>
+      <tr><td>transfer (ERC-20)</td><td>~51,000</td><td>Decrement one balance, increment another, emit event.</td></tr>
+      <tr><td>refund / withdraw</td><td>~40,000</td><td>One storage write + the ETH-sending <code>call</code>.</td></tr>
+      <tr><td>claimReward</td><td>~75,000</td><td>Flag write + a fresh balance <code>SSTORE</code> in the token.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Gas-saving choices already in the code: <code>immutable</code> for goal/deadline/beneficiary
+     (read from bytecode, not storage), custom errors instead of revert strings, and <code>unchecked</code>
+     blocks where overflow is already proven impossible.</p>
+
+  <h3 style="margin-top:18px">Security · re-entrancy</h3>
+  <div class="concept"><span class="clabel">Core concept · the re-entrancy attack</span>
+    <p>When a contract sends ETH with <code>.call</code>, the recipient can be another <em>contract</em>
+       whose <code>receive()</code> function runs arbitrary code — including calling <em>back</em> into your
+       function before it finished. If you sent the ETH <em>before</em> zeroing the contributor's balance,
+       the attacker re-enters <code>refund()</code> and is refunded again and again. This is the 2016 DAO
+       hack that cost ~$60M and forced the Ethereum/Classic split.</p>
+  </div>
+
+  <div class="listing">
+    <div class="lhead"><span class="fname">Attacker.sol — what we defend against</span><span class="ltag">Solidity</span></div>
+<pre><code>contract Attacker {
+    Crowdfund public target;
+    constructor(address t) { target = Crowdfund(t); }
+
+    function attack() external payable {
+        target.contribute{value: msg.value}();
+        target.refund();                       // triggers receive() below
+    }
+    // The EVM calls this on incoming ETH — the re-entrancy hook.
+    receive() external payable {
+        if (address(target).balance &gt;= msg.value) {
+            target.refund();                   // re-enter BEFORE the first call returns
+        }
+    }
+}</code></pre>
+  </div>
+
+  <p class="section-intro">Our <code>refund()</code> defeats this in two independent ways:</p>
+  <ul class="steps">
+    <li><b>Checks-effects-interactions.</b> We set <code>contributions[msg.sender] = 0</code> <em>before</em>
+        the <code>call</code>. When the attacker re-enters, the <code>require(amount &gt; 0)</code> check now
+        fails — there is nothing left to refund. CEI alone is sufficient here.</li>
+    <li><b>The <code>nonReentrant</code> guard.</b> Belt and braces: the lock flag is set on entry, so any
+        re-entrant call reverts with <code>"reentrancy"</code> regardless of state ordering. This protects
+        even if a future edit accidentally violates CEI.</li>
+  </ul>
+
+  <h3 style="margin-top:18px">Security · integer overflow</h3>
+  <div class="concept"><span class="clabel">Core concept · checked arithmetic in 0.8.x</span>
+    <p>Before Solidity 0.8, <code>uint256</code> wrapped silently — <code>2²⁵⁶−1 + 1 == 0</code> — and
+       attackers exploited it to forge enormous balances (the 2018 "batchOverflow" bug). Since 0.8 the
+       compiler inserts overflow/underflow checks on every <code>+ − ×</code> and reverts on violation. We
+       only drop into <code>unchecked</code> where a preceding <code>require</code> already guarantees safety,
+       trading a tiny gas saving for no loss of correctness.</p>
+  </div>
+
+  <h3 style="margin-top:18px">Security checklist</h3>
+  <table class="ftable">
+    <thead><tr><th>Risk</th><th>Mitigation in this code</th></tr></thead>
+    <tbody>
+      <tr><td>Re-entrancy</td><td>CEI ordering + <code>nonReentrant</code> modifier on every ETH-sending function.</td></tr>
+      <tr><td>Integer overflow</td><td>Solidity 0.8 checked math; <code>unchecked</code> only where proven safe.</td></tr>
+      <tr><td>Unauthorized mint</td><td><code>mint</code> reverts unless <code>msg.sender == minter</code>.</td></tr>
+      <tr><td>Double withdraw / claim</td><td><code>withdrawn</code> and <code>rewardClaimed</code> flags set before the action.</td></tr>
+      <tr><td>Locked funds</td><td>Pull-based refunds — no loop that can be DoS'd by one reverting recipient.</td></tr>
+      <tr><td>Calling out of order</td><td><code>campaignOpen</code> / <code>campaignEnded</code> modifiers gate by deadline.</td></tr>
+      <tr><td>Failed ETH send</td><td>Low-level <code>call</code> return value checked with <code>require(ok)</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="keyidea"><span class="clabel">Key idea</span>
+    <p>Secure Solidity is mostly discipline, not cleverness: settle your own state before you talk to anyone
+       else (CEI), guard re-entry, check every external call's result, and let the 0.8 compiler catch your
+       arithmetic. Then have it audited.</p>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#gas">Gas &amp; EIP-1559 calculator</a>
+    <a href="./index.html#evm">EVM opcode walker</a>
+    <a href="./index.html#hash">Hashing (event topics, selectors)</a>
+  </div>
+</section>
+
+<!-- LEARNING OUTCOMES -->
+<section id="outcomes" class="card anchor-offset">
+  <h2>7 · Mapping to learning outcomes</h2>
+  <p class="section-intro">This single project touches most of the course's stated objectives and the
+     concrete sessions that introduce each piece. It is, in effect, a portfolio-grade version of the weekly
+     intermediate exercises.</p>
+  <div class="outcomes"><b>Syllabus objectives exercised</b>
+    <ul>
+      <li><b>Understand the foundations</b> — hashing (event topics &amp; the 4-byte function selector are
+          <code>keccak256</code> truncations), digital signatures (the wallet signs every write), and the
+          account model (EOA caller vs the two contract accounts). <em>Sessions 1–2, 6.</em></li>
+      <li><b>Program &amp; simulate smart contracts for currency</b> — the ERC-20 token <em>is</em> a custom
+          currency, and the escrow is a custom program governing it; both are deployed to a public testnet
+          and driven from a Dapp. <em>Sessions 6–9.</em></li>
+      <li><b>Read the research / look ahead</b> — the security analysis re-derives the DAO-hack and
+          batchOverflow lessons that show up across the crypto-security literature you'll meet in the
+          capstone. <em>Sessions 10–15.</em></li>
+    </ul>
+  </div>
+  <table class="ftable">
+    <thead><tr><th>Project piece</th><th>Course session(s)</th></tr></thead>
+    <tbody>
+      <tr><td>keccak256 selectors &amp; event topics</td><td>S2 — hashing &amp; signatures</td></tr>
+      <tr><td>Writing &amp; deploying Solidity</td><td>S6–S7 — Ethereum &amp; Solidity</td></tr>
+      <tr><td>ERC-20 token mechanics</td><td>S7 — Solidity programming exercise</td></tr>
+      <tr><td>Escrow / governance logic, Dapp front-end</td><td>S8–S9 — DAOs &amp; Dapps</td></tr>
+      <tr><td>Gas, fees, the EVM</td><td>S6 — gas as metering</td></tr>
+      <tr><td>Extensions toward privacy &amp; Web3</td><td>S10–S11 — ZK proofs &amp; Web3</td></tr>
+    </tbody>
+  </table>
+  <div class="playlinks"><span class="plabel">Jump to the course breakdown:</span>
+    <a href="./course.html#program">All 15 sessions</a>
+    <a href="./course.html#mod-ethereum">Module C · Ethereum</a>
+    <a href="./course.html#mod-daos">Module D · DAOs &amp; Dapps</a>
+  </div>
+</section>
+
+<!-- EXTENSIONS -->
+<section id="extensions" class="card anchor-offset">
+  <h2>8 · Extensions</h2>
+  <p class="section-intro">Once the base project works, each of these is a self-contained next exercise that
+     pulls in a later session's material.</p>
+  <div class="extgrid">
+    <div class="extcard">
+      <h4>NFT rewards (ERC-721)</h4>
+      <p>Replace the fungible reward with a one-of-a-kind backer NFT whose <code>tokenURI</code> points to
+        IPFS metadata. Mints become unique <code>tokenId</code>s. Ties into the playground's NFT module.</p>
+    </div>
+    <div class="extcard">
+      <h4>DAO governance</h4>
+      <p>Let reward-token holders vote on whether to release funds in tranches instead of one withdrawal —
+        the token becomes a governance token and the escrow becomes a mini-treasury. This is Sessions 8–9 made
+        real.</p>
+    </div>
+    <div class="extcard">
+      <h4>Price oracle</h4>
+      <p>Denominate the goal in USD and read ETH/USD from a Chainlink price feed so the target is
+        currency-stable. Introduces the oracle trust model and the "oracle problem".</p>
+    </div>
+    <div class="extcard">
+      <h4>ZK private contributions</h4>
+      <p>Hide individual contribution amounts behind a zero-knowledge commitment, proving "I contributed ≥ X"
+        without revealing the amount — a bridge to the Session 10 ZK material.</p>
+    </div>
+    <div class="extcard">
+      <h4>Permit (EIP-2612)</h4>
+      <p>Add gasless approvals to the token via signed <code>permit</code> messages, so contributors approve
+        with a signature instead of a transaction — real-world UX used by USDC and DAI.</p>
+    </div>
+    <div class="extcard">
+      <h4>L2 deployment</h4>
+      <p>Deploy the same bytecode to an Optimism or Arbitrum testnet and compare gas costs — connects to the
+        playground's rollups module and Session 11's scaling discussion.</p>
+    </div>
+  </div>
+  <div class="playlinks"><span class="plabel">Related demos:</span>
+    <a href="./index.html#nft">NFTs (ERC-721)</a>
+    <a href="./index.html#rollups">L2 rollups</a>
+    <a href="./index.html#amm">AMM (x·y=k)</a>
+    <a href="./course.html#mod-web3">Course: Web3 &amp; ZK (S10–11)</a>
+  </div>
+</section>
+
+<!-- REFERENCES -->
+<section id="references" class="card anchor-offset">
+  <h2>9 · References</h2>
+  <ul class="refs">
+    <li><div class="rt">Antonopoulos &amp; Wood — <em>Mastering Ethereum: Building Smart Contracts and Dapps</em> (O'Reilly, 2018)</div><div class="rd">Course-recommended. Chapters on Solidity, tokens, and security patterns map directly onto this project.</div></li>
+    <li><div class="rt">EIP-20 — ERC-20 Token Standard</div><div class="rd">The normative specification of the six functions and two events implemented in §2. <code>eips.ethereum.org/EIPS/eip-20</code></div></li>
+    <li><div class="rt">OpenZeppelin Contracts — ERC20, Ownable, ReentrancyGuard</div><div class="rd">The audited implementations you should inherit in production. <code>docs.openzeppelin.com/contracts</code></div></li>
+    <li><div class="rt">Solidity docs — Security Considerations &amp; Checks-Effects-Interactions</div><div class="rd">The canonical write-up of CEI, re-entrancy, and the 0.8 checked-arithmetic change. <code>docs.soliditylang.org</code></div></li>
+    <li><div class="rt">ethers.js v6 documentation</div><div class="rd">Provider/Signer/Contract API used in the front-end. <code>docs.ethers.org/v6</code></div></li>
+    <li><div class="rt">Hardhat documentation</div><div class="rd">Compile, test, and deploy tooling for Path B. <code>hardhat.org/docs</code></div></li>
+    <li><div class="rt">The DAO Hack (2016) &amp; batchOverflow (2018)</div><div class="rd">Post-mortems that motivate the re-entrancy and overflow defences in §6.</div></li>
+  </ul>
+  <div class="connects"><span class="clabel">GenAI acknowledgement</span>
+    <p>Per the course AI policy, any GenAI assistance used to draft code for a submission must be acknowledged.
+       This page is a study companion — for graded work, disclose tool use as the syllabus requires.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>A worked-example companion to <em>Blockchain, Cryptocurrencies, and Fintech</em> (BCSAI, IE University).
+     Code is illustrative and targets Solidity 0.8.24 / ethers v6 on the Sepolia testnet — review and audit
+     before any mainnet use. See the <a href="./course.html">course outline</a> and the
+     <a href="./index.html">interactive playground</a>.</p>
+</footer>
+
+</body>
+</html>
