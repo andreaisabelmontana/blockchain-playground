@@ -102,6 +102,41 @@
 
 .section-intro{color:var(--mute);max-width:80ch}
 .anchor-offset{scroll-margin-top:120px}
+
+/* worked-example / code snippet box */
+.worked{background:#0a0f24;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;margin:10px 0}
+.worked .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.worked p{margin:4px 0 0;font-size:13px;color:var(--ink)}
+.worked pre{margin:8px 0 0;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5;color:#cdeede;white-space:pre}
+.worked code{background:var(--panel2);padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace}
+
+/* pitfall / connects-to note */
+.pitfall{background:#2a1d12;border:1px solid #5a3a1f;border-left:4px solid var(--warn);border-radius:8px;padding:10px 12px;margin:10px 0}
+.pitfall .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--warn);font-weight:700}
+.pitfall p{margin:4px 0 0;font-size:13px;color:#f3dcc2}
+.pitfall code{background:#3a2716;padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace}
+
+.connects{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:9px 12px;margin:10px 0}
+.connects .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);font-weight:600}
+.connects p{margin:4px 0 0;font-size:13px;color:var(--ink)}
+
+/* prerequisites strip */
+.prereq{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:14px 0}
+.prereq .pcell{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.prereq .pcell b{display:block;color:var(--accent);font-size:13px;margin-bottom:4px}
+.prereq .pcell span{color:var(--mute);font-size:12px}
+
+/* rubric table */
+.rubric{width:100%;border-collapse:collapse;margin:12px 0 0;font-size:13px}
+.rubric th,.rubric td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.rubric th{background:var(--panel2);color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.rubric td{color:var(--ink)}
+.rubric td:first-child{color:var(--accent2);font-weight:600;white-space:nowrap}
+
+.tips{margin:10px 0 0;padding:10px 12px;background:var(--code);border:1px solid var(--line);border-radius:8px}
+.tips b{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.tips ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--mute)}
+.tips ul li{margin:4px 0}
 </style>
 </head>
 <body>
@@ -170,6 +205,38 @@
        and code writing <em>with appropriate acknowledgement</em>. GenAI may <strong>not</strong> be used
        for presentations, group submissions, or exams. Inappropriate use of AI-generated content is
        treated as academic misconduct and can mean failing the assignment or the course.</p>
+  </div>
+
+  <h3 style="margin-top:22px">Prerequisites &amp; how this course connects</h3>
+  <p class="section-intro">This is a 4th-year compulsory course in the BCSAI degree, and it assumes the
+     maturity that earlier years build. You do not need prior blockchain experience, but the cryptography
+     and systems content lands much faster if the following are already comfortable — and each maps onto a
+     specific part of the syllabus.</p>
+  <div class="prereq">
+    <div class="pcell"><b>Programming &amp; data structures</b><span>Comfort reading code, plus trees and hashing — directly reused in Merkle trees (S5) and Solidity (S7).</span></div>
+    <div class="pcell"><b>Discrete maths / modular arithmetic</b><span>Finite fields and modular exponentiation underpin ECDSA and ZK proofs (S2, S10).</span></div>
+    <div class="pcell"><b>Basic probability</b><span>Mining is a Poisson process; understanding expected work clarifies difficulty and 51% attacks (S3).</span></div>
+    <div class="pcell"><b>Networking intuition</b><span>Peer-to-peer gossip, latency and partitions explain why consensus is hard (S1, S3, S4).</span></div>
+    <div class="pcell"><b>A little JavaScript</b><span>Helpful for the Dapp front-end glue and for the playground demos that accompany the lectures.</span></div>
+    <div class="pcell"><b>Curiosity about economics</b><span>Incentives, game theory and token design recur from PoS through DAOs and Web3 (S3, S8–S11).</span></div>
+  </div>
+  <div class="connects"><span class="clabel">How it connects forward</span>
+    <p>The course is a ladder: cryptographic primitives (S1–2) secure a ledger; consensus (S3) agrees on its
+       history; Bitcoin (S4–5) is the minimal application of those ideas; Ethereum (S6–7) generalises the
+       ledger into a programmable world computer; DAOs/Dapps (S8–9) build organisations on top; ZK and Web3
+       (S10–11) push privacy, scaling and ownership; and the fintech lectures + capstone (S12–15) connect it
+       all to research and industry. Skipping a rung makes the next one wobble — each session deliberately
+       reuses the previous one's vocabulary.</p>
+  </div>
+
+  <div class="rulebox">
+    <h4>Weekly study-load (3 ECTS ≈ 75 hours)</h4>
+    <p style="margin:0 0 6px;color:var(--mute);font-size:13px">Across 15 sessions, budget roughly
+       <strong>5 hours per week</strong> total: ~1–1.5h consolidating the lecture, ~2–3h on the programming
+       exercise that is due at the start of the next session, and ~1h on readings/discussion prep. The load
+       is front-loaded toward exercises (sessions 2–11) and peaks again at the capstone (sessions 12–15).
+       Treat each weekly exercise as non-optional rehearsal — they are 50% of the grade and the best
+       preparation for the comprehensive re-sit exam should you ever need it.</p>
   </div>
 </section>
 
@@ -246,6 +313,55 @@
     </div>
   </div>
 
+  <h3 style="margin-top:22px">Rubric &amp; deliverable formats</h3>
+  <p class="section-intro">What each component is actually judged on, and the form your submission should
+     take. These criteria are an instructional reconstruction of the syllabus weights — always defer to the
+     professor's exact brief for any given exercise.</p>
+
+  <table class="rubric">
+    <thead><tr><th>Component</th><th>What it rewards</th><th>Deliverable format</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Intermediate exercises<br>(50%)</td>
+        <td><b>Correctness</b> — does it produce the right result / pass the tests? <b>Understanding</b> —
+            is the approach sound, not copy-pasted? <b>Code quality</b> — readable, commented, no obvious
+            security holes. <b>On time</b> — due at the <em>start</em> of the next session.</td>
+        <td>Source code (Python/JS/Solidity) plus a short README or notebook explaining your reasoning;
+            GenAI use acknowledged where applied. Submit per the professor's channel for each session.</td>
+      </tr>
+      <tr>
+        <td>Group presentation<br>(40%)</td>
+        <td><b>Depth of analysis</b> — a real, specific SWOT, not a summary. <b>Technical accuracy</b> —
+            correct use of course concepts. <b>Synthesis</b> — links to the cryptography/consensus/contract
+            material. <b>Delivery</b> — clarity, timing, fielding questions.</td>
+        <td>~5-student group talk in session 15 with slides; everyone presents. No GenAI permitted for
+            this component (presentations &amp; group submissions are excluded by the AI policy).</td>
+      </tr>
+      <tr>
+        <td>Class participation<br>(10%)</td>
+        <td><b>Consistency</b> across the live sessions, <b>quality</b> of questions and discussion, and
+            active engagement in in-class exercises and the collaborative, applied format.</td>
+        <td>Continuous, in-person. Tied to the 80% attendance rule below — you cannot participate in
+            sessions you miss.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tips"><b>Tips to maximise the grade</b>
+    <ul>
+      <li><b>Never skip an exercise.</b> At 50% over sessions 2–11, each is worth roughly 5 points of your
+          final mark — and they're cumulative practice for everything after.</li>
+      <li><b>Submit something even if incomplete.</b> Partial, well-explained work earns partial credit;
+          a missing submission earns zero.</li>
+      <li><b>Acknowledge GenAI honestly</b> on code where you used it — undisclosed use is misconduct that
+          can fail the assignment or the course.</li>
+      <li><b>Treat participation as free marks</b> you earn just by showing up prepared and engaging — but
+          only if you meet the 80% attendance threshold.</li>
+      <li><b>Start the capstone in week 12.</b> The 40% component rewards depth, and depth needs weeks, not
+          days.</li>
+    </ul>
+  </div>
+
   <div class="rulebox">
     <h4>Pass, attendance &amp; re-sit rules</h4>
     <ul>
@@ -305,10 +421,19 @@
         <h4>Introduction to cryptographic ledgers (blockchain)</h4>
         <p class="obj">Objective: establish what a blockchain is and frame the research landscape of the field.</p>
         <ul class="topics">
-          <li><b>The cryptographic ledger.</b> A tamper-proof sequence of data that any user can read and
-              append to — no trusted central operator required.</li>
-          <li><b>Course framing.</b> The instructor's background in blockchain research and a tour of the
-              latest advances in blockchain and cryptocurrencies.</li>
+          <li><b>The cryptographic ledger.</b> A blockchain is a tamper-proof sequence of data that any
+              user can read and append to with no trusted central operator. <em>Why it matters:</em> it
+              solves the double-spend problem for digital money without a bank. <em>How it works:</em> data
+              is grouped into blocks, each block commits to the previous block's hash, and a consensus rule
+              decides which chain is canonical. <em>Example:</em> a payment ledger where everyone holds the
+              same copy and can independently detect if a row was altered.</li>
+          <li><b>Centralised vs decentralised trust.</b> Traditional systems trust an operator to keep an
+              honest database; a blockchain replaces that with replication plus cryptography, so any
+              participant can verify the whole history themselves rather than trusting a single party not to
+              cheat or fail.</li>
+          <li><b>The research landscape.</b> The instructor frames his own blockchain research and surveys
+              live problem areas — scalability, privacy, MEV, cross-chain bridges — that the rest of the
+              course (and the capstone paper) will draw on.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Blockchain</span>
           <p>A <strong>blockchain</strong> is an append-only ledger of blocks, where each block stores the
@@ -317,15 +442,38 @@
              detectable. Trust comes from data structure + cryptography + consensus, not from an
              institution.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · a block as a struct</span>
+          <p>Strip away the jargon and a block is just a record that names its parent by hash:</p>
+<pre>block = {
+  index:      4,
+  timestamp:  1700000000,
+  data:       "Alice → Bob: 5 BTC",
+  prevHash:   "0000a3f1…9c",   // hash of block 3
+  nonce:      0,
+}
+block.hash = SHA256(index‖timestamp‖data‖prevHash‖nonce)
+// edit block 2's data → its hash changes →
+// block 3's prevHash no longer matches → chain "breaks"</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>A blockchain replaces "trust the operator" with "verify the math": the chain is its own
              audit trail.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>"Tamper-proof" really means <em>tamper-evident</em>. Nothing physically stops you editing your
+             own copy — but everyone else can instantly see your hashes no longer line up, so your forged
+             chain is simply rejected. Immutability is a social/economic property enforced by consensus,
+             not a magic lock.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 1 (What is Bitcoin?) for the big picture.</li>
-            <li>Nakamoto (2008), <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> — the original framing of a chained, timestamped ledger.</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 1 (What is Bitcoin?) for the big picture and vocabulary you'll reuse all term.</li>
+            <li>Nakamoto (2008), <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> — the 9-page original; read §3–4 (Timestamp Server, Proof-of-Work) to see the chained-ledger idea in its first form.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>Everything later in the course is a refinement of this one move: bind records with hashes, then
+             agree on one history. Hold that picture and the rest is detail.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#blockchain">Block chain visualiser</a>
@@ -338,10 +486,21 @@
         <h4>Signatures, hashing &amp; hash chains</h4>
         <p class="obj">Objective: master the cryptographic primitives that give blockchains their security and privacy.</p>
         <ul class="topics">
-          <li><b>Hashing algorithms.</b> One-way functions (e.g. SHA-256) producing fixed-size digests with the avalanche effect.</li>
-          <li><b>Public-key cryptography.</b> Keypairs where a private key signs and a public key verifies.</li>
-          <li><b>ECDSA.</b> The Elliptic Curve Digital Signature Algorithm used by Bitcoin (secp256k1) and Ethereum.</li>
-          <li><b>Hash chains.</b> Linking records by hash so the sequence becomes tamper-evident.</li>
+          <li><b>Hashing algorithms.</b> One-way functions (e.g. SHA-256) map any input to a fixed
+              256-bit digest. <em>Why it matters:</em> they give every piece of data a unique, fixed-size
+              fingerprint that is cheap to check but infeasible to forge or reverse. <em>How it works:</em>
+              the function is deterministic and collision-resistant, with the avalanche effect.
+              <em>Example:</em> a 1 GB file and the word "hi" both hash to exactly 64 hex characters.</li>
+          <li><b>Public-key cryptography.</b> An asymmetric keypair where the private key signs/decrypts and
+              the public key verifies/encrypts. It lets strangers exchange verifiable, confidential messages
+              without ever sharing a secret — the basis of every blockchain identity (your address is
+              derived from your public key).</li>
+          <li><b>ECDSA.</b> The Elliptic Curve Digital Signature Algorithm signs transactions on Bitcoin and
+              Ethereum over the <code>secp256k1</code> curve. Elliptic curves give the same security as RSA
+              with far smaller keys (256-bit vs ~3072-bit), which keeps signatures and addresses compact.</li>
+          <li><b>Hash chains &amp; Merkle trees.</b> Linking records by hash makes a sequence tamper-evident;
+              hashing pairs of records up a tree yields a single Merkle root that commits to thousands of
+              transactions at once.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Cryptographic hash</span>
           <p>A hash function maps arbitrary input to a fixed-length fingerprint such that it is infeasible
@@ -355,15 +514,36 @@
              authorization without revealing the secret. This is how a transaction proves "the owner
              approved this spend".</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · sign &amp; verify</span>
+          <p>Avalanche in action, then the signature flow Bitcoin actually uses:</p>
+<pre>SHA256("hello")  = 2cf24dba5fb0a30e26e83b2ac5b9e29e…
+SHA256("hellp")  = b21f5b3a8f9c…    // one letter → totally different
+
+// signing (secp256k1)
+sig        = ECDSA_sign(privKey, SHA256(tx))
+ok         = ECDSA_verify(pubKey, SHA256(tx), sig)  // → true
+// pubKey is public; privKey never leaves the wallet</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Hashes make data tamper-evident; signatures make actions un-forgeable. Together they replace
              account passwords with provable authorization.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>The private key <em>is</em> the money. There is no "forgot password" — lose the key and the
+             funds are gone, leak it and they're stolen. Also beware nonce reuse in ECDSA: signing two
+             messages with the same random <code>k</code> leaks the private key (the 2010 PS3 hack). Real
+             wallets use deterministic nonces (RFC 6979).</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 4 (Keys, Addresses) on ECDSA &amp; hashing.</li>
-            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — formal grounding for one-way functions and signatures.</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 4 (Keys, Addresses): how private→public→address derivation and ECDSA actually chain together.</li>
+            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — formal grounding for one-way functions and signatures; skim for the definitions, not the proofs.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>These two primitives are the whole security model. The exercise this week (your first of the
+             50% component) will have you hash data and verify a signature by hand — do it, because every
+             later session assumes it.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#hash">SHA-256 + avalanche</a>
@@ -377,11 +557,21 @@
         <h4>Proof of Work vs Proof of Stake</h4>
         <p class="obj">Objective: deep-dive into the two dominant consensus models and weigh their trade-offs.</p>
         <ul class="topics">
-          <li><b>Proof of Work (Bitcoin).</b> Miners verify new transactions by expending hashing work;
-              secure but with serious scalability/performance/energy costs.</li>
-          <li><b>Proof of Stake (Ethereum).</b> Validators are chosen and penalised by economic stake,
-              aiming to overcome PoW's limits — while opening new security questions as it matures.</li>
-          <li><b>Trade-offs.</b> Spotting the advantages and disadvantages of each model.</li>
+          <li><b>Proof of Work (Bitcoin).</b> Miners race to find a nonce making the block hash fall below a
+              target, verifying transactions by expending real hashing work. <em>Why it matters:</em> work
+              is expensive to produce but trivial to check, so honest history becomes the one nobody can
+              cheaply out-compute. <em>Cost:</em> serious energy use and limited throughput (~7 tx/s on
+              Bitcoin). <em>Example:</em> Bitcoin retargets difficulty every 2016 blocks to hold a ~10-minute
+              block time as hashpower grows.</li>
+          <li><b>Proof of Stake (Ethereum).</b> Validators lock up (stake) ETH and are pseudo-randomly chosen
+              to propose and attest blocks; dishonest behaviour is punished by <strong>slashing</strong> the
+              stake. It replaces burned energy with at-risk capital, enabling faster finality — while opening
+              new questions (long-range attacks, stake centralisation) as it matures.</li>
+          <li><b>Finality &amp; the longest-chain rule.</b> PoW offers probabilistic finality (more
+              confirmations = safer); Ethereum's PoS adds explicit checkpoint finality via the Casper-FFG
+              gadget, so blocks become irreversible after two finalised epochs.</li>
+          <li><b>Trade-offs.</b> Weighing security, decentralisation, energy, throughput and finality —
+              the practical lens for spotting each model's advantages and disadvantages.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Proof of Work</span>
           <p>Block producers search for a nonce so that <code>SHA-256(block) &lt; target</code>. Finding it
@@ -393,15 +583,38 @@
              Misbehaviour is punished by <strong>slashing</strong> their stake. Security comes from
              economic skin-in-the-game rather than energy; Ethereum's 2022 "Merge" cut energy use ~99.95%.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · the mining loop</span>
+          <p>PoW in pseudocode — the whole "work" is brute-forcing a nonce:</p>
+<pre>target = 2**(256 - difficulty_bits)
+nonce  = 0
+while SHA256(blockHeader + nonce) &gt;= target:
+    nonce += 1          // ~ billions of tries
+# found! verifying is ONE hash:
+assert SHA256(blockHeader + nonce) &lt; target
+
+# difficulty_bits = 20  → ~1,000,000 hashes/block (toy)
+# Bitcoin today      → ~10^23 hashes/block</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>PoW buys security with electricity; PoS buys it with at-risk capital. Both make rewriting
              history more expensive than it's worth.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>A "51% attack" lets you reorder or censor <em>recent</em> blocks and double-spend — it does
+             <strong>not</strong> let you steal coins or forge signatures (the cryptography still holds) or
+             rewrite deeply-buried history. And in PoS the attacker's own stake gets slashed, so the attack
+             is often self-defeating economically.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — the philosophy and design of PoS.</li>
-            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 10 (Mining &amp; Consensus).</li>
+            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — the philosophy and design of PoS; pairs directly with this session.</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 10 (Mining &amp; Consensus): difficulty retargeting and the longest-chain rule in detail.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>Consensus is the answer to "who gets to append the next block?" — and the choice of answer
+             (work vs stake) cascades into energy, speed and decentralisation trade-offs you'll see again in
+             every chain Bitcoin (S4) and Ethereum (S6) build on.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#mining">Mine a block (PoW)</a>
@@ -438,10 +651,20 @@
         <h4>Bitcoin introduction &amp; core concepts</h4>
         <p class="obj">Objective: understand Bitcoin as the first decentralized digital currency and its building blocks.</p>
         <ul class="topics">
-          <li><b>Transaction verification.</b> Network nodes validate transactions cryptographically.</li>
-          <li><b>Public distributed ledger.</b> Every full node holds and checks the shared history.</li>
-          <li><b>UTXO model.</b> Bitcoin tracks unspent outputs, not balances.</li>
-          <li><b>Synchronization &amp; pruning.</b> How nodes catch up and how they discard spent data to save space.</li>
+          <li><b>Transaction verification.</b> Every network node independently checks each transaction:
+              signatures are valid, inputs reference real unspent outputs, and no value is created from
+              nothing. <em>Why it matters:</em> "don't trust, verify" is what makes the network trustless —
+              no node has to believe another. <em>Example:</em> your full node rejects a block even from a
+              miner if a single signature is bad.</li>
+          <li><b>Public distributed ledger.</b> Every full node holds and re-validates the entire shared
+              history, so the ledger is replicated thousands of times over rather than held by one
+              authority — censorship and silent edits become practically impossible.</li>
+          <li><b>UTXO model.</b> Bitcoin tracks a set of unspent transaction outputs, not account balances.
+              You spend coins by consuming whole outputs and creating new ones, which makes parallel
+              validation and clear ownership easy (but stateful smart contracts hard).</li>
+          <li><b>Synchronization &amp; pruning.</b> A new node downloads and verifies from the genesis block
+              forward (Initial Block Download); a pruned node keeps only the UTXO set and recent blocks,
+              discarding old block data while still enforcing every rule — so it runs on modest hardware.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · UTXO model</span>
           <p>Bitcoin has no account balances. The ledger is a set of <strong>Unspent Transaction
@@ -454,14 +677,35 @@
              keeping only the UTXO set and recent blocks — letting it run on modest hardware while still
              enforcing all rules.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · spending UTXOs &amp; change</span>
+          <p>Alice owns two UTXOs and wants to send Bob 0.7 BTC:</p>
+<pre>INPUTS  (consumed whole):
+  utxo_A: 0.5 BTC   ┐ total 0.8 BTC
+  utxo_B: 0.3 BTC   ┘
+OUTPUTS (newly created):
+  → Bob:   0.70 BTC
+  → Alice: 0.0999 BTC   (change)
+  fee = 0.8 − 0.70 − 0.0999 = 0.0001 BTC  (implicit, to miner)
+// utxo_A and utxo_B are now SPENT and removed from the UTXO set</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>In Bitcoin you don't "have a balance" — you hold a pocketful of unspent coins and spend them
              whole, making change like cash.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>The transaction fee is <em>not</em> a field you set directly — it's whatever inputs minus
+             outputs leaves behind. Forget the change output and you tip the miner your entire remaining
+             balance. Wallets add change automatically; raw-transaction builders do not.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 6 (Transactions) &amp; Ch. 2 (How Bitcoin Works).</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 6 (Transactions): inputs, outputs, scripts and fees; Ch. 2 (How Bitcoin Works) for the end-to-end payment story.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway · connects to S6</span>
+          <p>The UTXO model is the foil for Ethereum's account model in Session 6: stateless coins that are
+             great for parallelism and privacy, versus mutable accounts that are great for smart contracts.
+             Knowing why Bitcoin chose UTXOs explains why Ethereum chose differently.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#utxo">UTXO transaction builder</a>
@@ -474,10 +718,20 @@
         <h4>Bitcoin advanced concepts &amp; programming exercise</h4>
         <p class="obj">Objective: go beyond the basics into the tooling and extensions of the Bitcoin protocol.</p>
         <ul class="topics">
-          <li><b>SPV (Simplified Payment Verification).</b> Light clients that verify payments using block headers + Merkle proofs, without the full chain.</li>
-          <li><b>Wallet types.</b> Non-deterministic vs deterministic (HD/BIP-32) wallets, hot vs cold, custodial vs self-custody.</li>
-          <li><b>OP_RETURN.</b> A script opcode for embedding a small, provably-unspendable data payload in a transaction.</li>
-          <li><b>Catena.</b> Anchoring an auditable log to Bitcoin via OP_RETURN commitments.</li>
+          <li><b>SPV (Simplified Payment Verification).</b> Light clients verify that a payment is included
+              in the chain using only block headers plus a Merkle proof, never downloading the full ledger.
+              <em>Why it matters:</em> it's what lets a phone wallet (a few MB of headers) trust the network
+              without running a ~600 GB full node. <em>How:</em> request the sibling hashes that recompute
+              the block's Merkle root, then check the root against a trusted header.</li>
+          <li><b>Wallet types.</b> Non-deterministic (a random bag of keys) vs deterministic HD wallets
+              (BIP-32/39/44, all keys derived from one seed phrase); <strong>hot</strong> (online) vs
+              <strong>cold</strong> (offline/hardware) for the security/convenience trade-off; and
+              custodial (an exchange holds your keys) vs self-custody ("not your keys, not your coins").</li>
+          <li><b>OP_RETURN.</b> A script opcode that embeds up to ~80 bytes of provably-unspendable data in
+              a transaction — the sanctioned way to anchor a hash or timestamp on-chain without bloating the
+              UTXO set.</li>
+          <li><b>Catena.</b> A scheme that anchors an append-only, auditable log to Bitcoin via a chain of
+              <code>OP_RETURN</code> commitments, giving the log Bitcoin-grade non-equivocation guarantees.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · SPV &amp; Merkle proofs</span>
           <p>An SPV client downloads only block <em>headers</em>. To check that a transaction is included
@@ -490,14 +744,38 @@
              seed phrase (BIP-32/39/44). <code>OP_RETURN</code> lets a transaction carry up to ~80 bytes of
              arbitrary data, useful for timestamping/anchoring external records on-chain.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · a Merkle proof</span>
+          <p>To prove tx <code>D</code> is in a block of 4 transactions, you need just 2 hashes, not all 4:</p>
+<pre>            ROOT = H(H_AB ‖ H_CD)
+           /                    \
+      H_AB                        H_CD = H(H_C ‖ H_D)
+                                      /        \
+                                   H_C          H_D = H(D)
+
+Proof for D = [ H_C , H_AB ]        // O(log n) hashes
+verify:  H_CD' = H(H_C ‖ H(D));  ROOT' = H(H_AB ‖ H_CD')
+         ROOT' == header.merkleRoot ?  →  D is included</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>You don't need the whole blockchain to trust a payment — a Merkle proof against a header is
              enough, which is what makes phone wallets possible.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>SPV proves a transaction <em>was included</em>, not that it was <em>valid</em> or that the
+             header chain is the real one — a light client trusts miners on validity and assumes it's seeing
+             the most-work header chain. That weaker trust model is the price of not running a full node.
+             And your seed phrase, not any single private key, is the real backup: lose it and an HD wallet
+             is unrecoverable.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 5 (Wallets), Ch. 8 (SPV &amp; the Network).</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 5 (Wallets): seeds, HD derivation paths; Ch. 8 (The Network): SPV, bloom filters and how light clients talk to peers.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>Merkle proofs reappear everywhere — in Ethereum's state trie, in rollups, and in ZK systems
+             (S10). If you understand the proof above, you understand the data-availability trick behind
+             most of modern scaling.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#wallet">Wallets &amp; addresses</a>
@@ -534,10 +812,22 @@
         <h4>Ethereum &amp; smart contracts fundamentals</h4>
         <p class="obj">Objective: introduce smart contracts as the foundation of Ethereum's application layer.</p>
         <ul class="topics">
-          <li><b>Smart contracts.</b> Programs stored on the blockchain that follow "if this then that"
-              logic and are guaranteed to execute exactly as their code defines.</li>
-          <li><b>Application layer.</b> How contracts compose into the dApp/DeFi ecosystem.</li>
-          <li><b>Account model.</b> Ethereum's accounts (EOA vs contract), balances, and nonces vs Bitcoin's UTXOs.</li>
+          <li><b>Smart contracts.</b> Programs stored at an address on the blockchain that follow "if this
+              then that" logic and are guaranteed to execute exactly as their code defines. <em>Why it
+              matters:</em> they remove the trusted intermediary from agreements — escrow, voting, lending
+              run themselves. <em>How:</em> a transaction calls a function, every node runs the same code,
+              and the resulting state is recorded identically everywhere. <em>Example:</em> a vending-machine
+              contract that releases a token the instant payment clears.</li>
+          <li><b>Application layer.</b> Contracts <strong>compose</strong> — one can call another — so simple
+              pieces snap together into the dApp/DeFi ecosystem ("money legos"): a DEX calls a token, a
+              lender calls the DEX, all atomically in one transaction.</li>
+          <li><b>Account model.</b> Ethereum replaces UTXOs with mutable accounts that carry a balance and a
+              nonce: <strong>EOAs</strong> are controlled by a private key, <strong>contract accounts</strong>
+              are controlled by their code. State persists between calls, which is exactly what makes
+              stateful programs (unlike Bitcoin script) possible.</li>
+          <li><b>Gas &amp; the EVM.</b> Every operation costs gas, paid in ETH, so computation is metered and
+              infinite loops simply run out of fuel and revert — the network's defence against spam and
+              denial-of-service.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Smart contract</span>
           <p>A <strong>smart contract</strong> is code deployed to an address on the blockchain. Anyone can
@@ -551,14 +841,33 @@
              <strong>EVM</strong>, a deterministic stack machine; every opcode costs <strong>gas</strong>
              so computation is metered and spam is priced out.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · gas &amp; the fee bill</span>
+          <p>Under EIP-1559 a transaction's cost has a burned base fee plus a tip to the validator:</p>
+<pre>gasUsed       = 21000           // a plain ETH transfer
+baseFee       = 20 gwei         // set by the protocol, BURNED
+priorityFee   = 2  gwei         // your tip to the validator
+totalFee = gasUsed * (baseFee + priorityFee)
+         = 21000 * 22 gwei = 462,000 gwei = 0.000462 ETH
+// a contract call uses far more gas (e.g. ERC-20 transfer ≈ 50k)</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Ethereum is a world computer: a shared state machine where deploying code means publishing an
              unstoppable, publicly-callable program.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>"Immutable and unstoppable" cuts both ways: a bug in deployed code is permanent and publicly
+             exploitable, and a reverted transaction <em>still costs the gas it burned</em>. The DAO hack
+             (2016) and countless re-entrancy exploits since are all consequences of code being law.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 1–2 (Intro, Ethereum basics) &amp; Ch. 7 (Smart Contracts).</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 1–2 (Intro &amp; Ethereum basics) for the account model; Ch. 7 (Smart Contracts) and Ch. 13 (the EVM) for execution &amp; gas.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway · connects to S4</span>
+          <p>This is the deliberate flip from Bitcoin's UTXO model (S4): mutable accounts and metered
+             computation are what turn "digital cash" into "programmable money", at the cost of new attack
+             surfaces you'll learn to defend against in Sessions 7–8.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#accounts">ETH account model</a>
@@ -572,9 +881,19 @@
         <h4>Solidity &amp; programming exercise</h4>
         <p class="obj">Objective: get hands-on with Solidity and the crucial concepts behind programming Ethereum.</p>
         <ul class="topics">
-          <li><b>Solidity language.</b> Contracts, state variables, functions, visibility, <code>require</code>/modifiers.</li>
-          <li><b>Deployment lifecycle.</b> Compile → deploy → call, and how <code>msg.sender</code> drives access control.</li>
-          <li><b>Token standards.</b> ERC-20 (fungible) and ERC-721 (NFTs) as the canonical contract patterns.</li>
+          <li><b>Solidity language.</b> A statically-typed, contract-oriented language: contracts, state
+              variables (in storage), functions with visibility (<code>public</code>/<code>external</code>/
+              <code>internal</code>/<code>private</code>), <code>require</code> guards and reusable
+              <code>modifier</code>s. <em>Why it matters:</em> it's how you actually express on-chain logic.
+              <em>How:</em> it compiles down to EVM bytecode that every node executes deterministically.</li>
+          <li><b>Deployment lifecycle.</b> Compile → deploy (a transaction that writes bytecode to a new
+              address, paid in gas) → call. <code>msg.sender</code> identifies the caller and is the
+              foundation of access control (e.g. an <code>onlyOwner</code> modifier).</li>
+          <li><b>State, events &amp; reverts.</b> Writes change storage and cost gas; <code>view</code> reads
+              are free; <code>event</code>s log data cheaply for off-chain UIs; a failed <code>require</code>
+              reverts the <em>entire</em> transaction atomically — all or nothing.</li>
+          <li><b>Token standards.</b> ERC-20 (fungible) and ERC-721 (NFTs) are the canonical contract
+              patterns; coding to their shared interfaces is what makes wallets and DEXes interoperable.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Solidity</span>
           <p><strong>Solidity</strong> is a statically-typed, contract-oriented language that compiles to
@@ -588,14 +907,47 @@
              approve/transferFrom pair is what lets DEXes pull your tokens. <strong>ERC-721</strong> gives
              each <code>tokenId</code> a unique owner, pointing to off-chain metadata (often on IPFS).</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · a minimal Solidity contract</span>
+          <p>Ownership via <code>msg.sender</code>, a guard via <code>require</code>, and an event:</p>
+<pre>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PiggyBank {
+    address public owner;
+    event Withdrawn(address to, uint amount);
+
+    constructor() { owner = msg.sender; }   // deployer is owner
+
+    receive() external payable {}            // accept ETH
+
+    function withdraw(uint amount) external {
+        require(msg.sender == owner, "not owner");   // access control
+        require(amount &lt;= address(this).balance, "too much");
+        payable(owner).transfer(amount);             // effects after checks
+        emit Withdrawn(owner, amount);
+    }
+}</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Standards are why composability works: any wallet or contract can talk to any ERC-20/721
              token because they all expose the same function signatures.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall · re-entrancy</span>
+          <p>Sending ETH hands control to the recipient <em>mid-function</em>; if you update state
+             <em>after</em> the transfer, a malicious contract can call back in and drain you (the classic
+             DAO bug). Follow <strong>checks-effects-interactions</strong>: validate, update state, then
+             make external calls last. Also: <code>uint</code> underflow no longer wraps silently in
+             Solidity ≥0.8 — it reverts.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 7 (Smart Contracts &amp; Solidity), Ch. 10 (Tokens).</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 7 (Smart Contracts &amp; Solidity), Ch. 10 (Tokens &amp; ERC-20/721), Ch. 9 (Security: re-entrancy &amp; common pitfalls).</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>This is the most heavily-weighted skill in the exercise stream. Write, deploy and break your
+             own contracts now — the same Solidity carries straight into the DAO and Dapp work in Sessions
+             8–9.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#solidity">Deploy a Solidity contract</a>
@@ -632,9 +984,21 @@
         <h4>DAOs: principles &amp; mechanisms · Dapps and DAOs</h4>
         <p class="obj">Objective: understand DAO governance and how algorithms and people cooperate without a traditional company.</p>
         <ul class="topics">
-          <li><b>DAO principles.</b> Decentralized Autonomous Organizations governed by smart contracts rather than corporate hierarchy.</li>
-          <li><b>Algorithms + individuals.</b> Coordination and decision-making without incorporation as a legal business entity.</li>
-          <li><b>Dapps and DAOs.</b> The tools and mechanisms to build a DAO, deploy it on a public blockchain, and interface with it through a Dapp.</li>
+          <li><b>DAO principles.</b> A Decentralized Autonomous Organization encodes its membership,
+              treasury, and decision rules in smart contracts rather than a corporate hierarchy. <em>Why it
+              matters:</em> strangers across the world can pool funds and govern them with no bank
+              signatory or legal incorporation. <em>How:</em> token holders submit proposals, vote on-chain,
+              and passing proposals execute automatically. <em>Example:</em> a grants DAO that releases
+              treasury ETH only when a vote crosses quorum.</li>
+          <li><b>Governance mechanisms.</b> Voting power is usually token-weighted (1 token = 1 vote), with
+              parameters like <strong>quorum</strong>, <strong>voting period</strong>, and an execution
+              <strong>timelock</strong> that delays passed proposals so members can exit if they disagree.</li>
+          <li><b>Algorithms + individuals.</b> DAOs let code and people cooperate without forming a
+              traditional legal entity — the contract is the constitution, the bylaws and the bank account
+              all at once.</li>
+          <li><b>Dapps and DAOs.</b> A Dapp is the human interface: the tools and mechanisms to build a DAO,
+              deploy it on a public blockchain, and interact with it through a web front-end wired to the
+              contracts via a wallet/RPC provider.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · DAO</span>
           <p>A <strong>Decentralized Autonomous Organization</strong> is an entity whose rules — membership,
@@ -647,14 +1011,35 @@
              smart contracts as its backend. The browser talks to the chain through a wallet/RPC provider,
              so logic and state are public and censorship-resistant rather than living on a private server.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · the proposal lifecycle</span>
+          <p>The on-chain governance loop most DAO frameworks (e.g. OpenZeppelin Governor) implement:</p>
+<pre>1. propose(targets, calldata, description)   → proposalId
+2. … voting delay …
+3. castVote(proposalId, support)             // weight = token balance
+4. … voting period ends; tally vs quorum …
+5. queue(proposalId)                         // enters timelock
+6. … timelock delay (e.g. 2 days) …
+7. execute(proposalId)                        // the calldata runs on-chain</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>A DAO is "the company is the contract": governance and money move only when code says a vote
              passed — no boardroom required.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>Token-weighted voting is plutocratic — a "whale" or a flash-loaned majority can pass a proposal
+             to drain the treasury (governance attacks are real). Timelocks, quorums and delegation mitigate
+             this but don't eliminate it. "Decentralized" governance is only as decentralized as its token
+             distribution.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 9 (Smart Contract Security) &amp; the DAO case study.</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 9 (Smart Contract Security) and the original <em>The DAO</em> case study — required reading for why governance code must be bulletproof.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway · connects to S7</span>
+          <p>A DAO is just the Solidity from Session 7 with voting logic and a treasury attached. Every
+             access-control and re-entrancy lesson applies with higher stakes, because here the contract
+             literally holds the money.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#solidity">Contract state &amp; access control</a>
@@ -667,23 +1052,57 @@
         <h4>Deploying DAOs &amp; building Dapps</h4>
         <p class="obj">Objective: deploy DAOs on public blockchains and interact with them via Dapps.</p>
         <ul class="topics">
-          <li><b>Deployment.</b> Putting a DAO's governance contracts onto a public chain (testnet/mainnet).</li>
-          <li><b>Dapp integration.</b> Connecting a front-end to the contracts to submit proposals and votes.</li>
-          <li><b>Practical exercise.</b> A programming exercise completing the deploy-and-interact loop.</li>
+          <li><b>Deployment.</b> Compiling and publishing a DAO's governance contracts to a public chain —
+              first a <strong>testnet</strong> (Sepolia/Holesky, free faucet ETH) to rehearse, then optionally
+              mainnet. <em>Why it matters:</em> deployment is irreversible and gas-priced, so you get one
+              shot at the constructor parameters. <em>How:</em> a tool like Hardhat/Foundry sends the
+              creation transaction and returns the new contract address.</li>
+          <li><b>Dapp integration.</b> Wiring a front-end (ethers.js/web3.js + a wallet like MetaMask) to the
+              contract's ABI so users can read state, submit proposals, and cast votes from a browser.</li>
+          <li><b>Reads vs writes.</b> <code>view</code> calls are free and instant; state-changing calls are
+              transactions that cost gas, must be signed by the user's wallet, and only confirm after a
+              block — the UI has to handle that latency and possible failure.</li>
+          <li><b>Practical exercise.</b> A programming exercise completing the full deploy-and-interact loop,
+              end to end.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Deploy &amp; interact loop</span>
           <p>Deploying writes contract bytecode to a new address (paid in gas); from then on the Dapp builds
              transactions that call the contract's functions. Reads are free (<em>view</em> calls); writes
              cost gas and change on-chain state. The same loop underpins every dApp you'll build.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · calling a contract from a Dapp</span>
+          <p>The read/write split with ethers.js — note which line opens the wallet:</p>
+<pre>import { ethers } from "ethers";
+const provider = new ethers.BrowserProvider(window.ethereum);
+const dao = new ethers.Contract(daoAddress, daoAbi, provider);
+
+// READ — free, no wallet popup, returns immediately
+const state = await dao.state(proposalId);
+
+// WRITE — needs a signer; pops MetaMask, costs gas, awaits a block
+const signer = await provider.getSigner();
+const tx = await dao.connect(signer).castVote(proposalId, 1);
+await tx.wait();   // confirmed on-chain</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Shipping a Dapp is mostly wiring a UI to function calls — the hard, irreversible part is
              getting the contract logic right <em>before</em> you deploy.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>Deploy to a <em>testnet</em> first — a constructor typo on mainnet is permanent and the gas is
+             gone. Other classics: forgetting that the front-end may be on the wrong network, not handling a
+             user who rejects the wallet popup, and treating a sent transaction as final before
+             <code>tx.wait()</code> confirms it (it can still revert).</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps) &amp; deployment tooling.</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps): the web3 stack, providers, and connecting front-ends to deployed contracts.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>This is the last "build" session before the frontier topics — by the end you can take an idea
+             from Solidity to a working, deployed, clickable app, which is exactly the proficiency the 50%
+             exercise stream is grading.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#solidity">Deploy &amp; call (simulated)</a>
@@ -719,9 +1138,19 @@
         <h4>Zero-knowledge proofs</h4>
         <p class="obj">Objective: learn to create and verify proofs that reveal nothing beyond a statement's truth.</p>
         <ul class="topics">
-          <li><b>Prover &amp; verifier.</b> One party convinces another that a statement is true.</li>
-          <li><b>Zero-knowledge property.</b> The verifier learns nothing except that the statement holds.</li>
-          <li><b>Tooling.</b> Mechanisms to construct and check ZK proofs (the basis of ZK-rollups and private transactions).</li>
+          <li><b>Prover &amp; verifier.</b> A <em>prover</em> convinces a <em>verifier</em> that a statement
+              is true. <em>Why it matters:</em> you can prove you satisfy a condition (over-18, solvent, know
+              a password) without revealing the underlying data. <em>Example:</em> proving you know a maze's
+              exit by repeatedly emerging from the side the verifier names, without ever showing the path.</li>
+          <li><b>The three properties.</b> A good ZK system is <strong>complete</strong> (true statements
+              always verify), <strong>sound</strong> (false statements almost never do), and
+              <strong>zero-knowledge</strong> (the proof leaks nothing beyond the statement's truth).</li>
+          <li><b>SNARKs vs STARKs.</b> zk-SNARKs are tiny and cheap to verify but need a trusted setup;
+              zk-STARKs need no trusted setup and are post-quantum, at the cost of larger proofs — the
+              practical engines behind on-chain ZK.</li>
+          <li><b>Tooling &amp; applications.</b> Circuits (e.g. Circom) compile a computation into a provable
+              form; the two killer apps are <strong>privacy</strong> (shielded transactions) and
+              <strong>scaling</strong> (ZK-rollups proving a batch of transactions in one succinct proof).</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Zero-knowledge proof</span>
           <p>A <strong>zero-knowledge proof</strong> lets a <em>prover</em> convince a <em>verifier</em> that
@@ -730,14 +1159,39 @@
              <em>zero-knowledge</em> (no extra information leaks). zk-SNARKs/STARKs make this practical
              on-chain.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · commit, then prove</span>
+          <p>A hash commitment is the simplest "reveal nothing yet" primitive ZK builds on:</p>
+<pre>// PROVER picks secret s, sends only a commitment:
+commit = SHA256(s ‖ r)        // r = random blinding factor
+// …later, to PROVE knowledge of s without re-using it elsewhere,
+// a ZK proof shows:  "I know s,r such that SHA256(s‖r)=commit
+//                      AND s satisfies &lt;statement&gt;"
+// VERIFIER checks the proof; learns ONLY that it's true.
+
+// ZK-rollup analogy:
+proof = prove( "I correctly executed 5,000 transactions,
+                old_root → new_root" )
+// L1 verifies one small proof instead of re-running 5,000 txs</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>ZK proofs separate "I can prove it" from "I'll show you how" — enabling both privacy and
              cheap verification of huge computations (the heart of ZK-rollups).</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>"Zero-knowledge" is not "anonymous by default" — a ZK system only hides what the circuit is
+             designed to hide; metadata (timing, amounts, the calling address) can still leak. And SNARKs'
+             trusted setup is a real risk: if the setup's secret "toxic waste" survives, an attacker can
+             forge proofs. Soundness is computational, not absolute.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — Goldwasser–Micali and the origins of zero-knowledge.</li>
+            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — Goldwasser–Micali and the origins of zero-knowledge; the conceptual source for this whole session.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway · connects to S5</span>
+          <p>ZK-rollups are the grown-up version of the Merkle-proof idea from Session 5: instead of proving
+             one transaction is included, you prove a whole batch was executed correctly — succinct
+             verification is the throughline.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#rollups">L2 rollups (incl. ZK)</a>
@@ -750,9 +1204,18 @@
         <h4>New directions in Web3</h4>
         <p class="obj">Objective: explore the Web3 ecosystem and what sets it apart from earlier web paradigms.</p>
         <ul class="topics">
-          <li><b>Decentralization.</b> Shifting control from platforms to protocols and users.</li>
-          <li><b>Blockchain technologies.</b> Identity, storage, and composable on-chain services.</li>
-          <li><b>Token-based economics.</b> Tokens as incentives, ownership, and coordination mechanisms.</li>
+          <li><b>Decentralization.</b> Shifting control from platforms to open protocols and users.
+              <em>Why it matters:</em> if the rules live in public contracts rather than a company's
+              servers, no single party can deplatform, rug, or silently change the terms. <em>Example:</em>
+              a DEX that keeps trading even if its founding team disappears.</li>
+          <li><b>Blockchain technologies.</b> The Web3 stack — decentralized identity (wallets/ENS),
+              decentralized storage (IPFS/Arweave), oracles for off-chain data, and composable on-chain
+              services that any app can build on.</li>
+          <li><b>Token-based economics.</b> Tokens align incentives: they can represent ownership
+              (equity-like), access (utility), or governance (votes), and are the coordination glue that
+              lets a protocol bootstrap a network without a central paymaster.</li>
+          <li><b>DeFi primitives.</b> Lending, automated market makers (AMMs), and derivatives — the
+              composable "money legos" that show Web3's economics in action.</li>
         </ul>
         <div class="concept"><span class="clabel">Core concept · Web3</span>
           <p><strong>Web3</strong> reframes the web around user-owned data and assets: instead of logging
@@ -760,14 +1223,35 @@
              and apps are built on open, composable protocols. Token economics align incentives between
              users, builders, and the network itself.</p>
         </div>
+        <div class="worked"><span class="clabel">Worked example · the AMM constant-product rule</span>
+          <p>Uniswap-style pricing with no order book — just <code>x·y=k</code>:</p>
+<pre>pool: x = 100 ETH, y = 300,000 USDC   →  k = x·y = 30,000,000
+buy ETH with 3,000 USDC (0.3% fee):
+  y' = 300,000 + 3,000*0.997 = 302,991
+  x' = k / y' = 30,000,000 / 302,991 = 99.013 ETH
+  ETH received = 100 − 99.013 = 0.987 ETH
+// price impact (slippage): big trades move x·y along the curve
+// liquidity providers earn the 0.3% fee on every swap</pre>
+        </div>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Web1 = read, Web2 = read/write, Web3 = read/write/<em>own</em> — ownership is the new primitive.</p>
         </div>
+        <div class="pitfall"><span class="clabel">Common pitfall</span>
+          <p>"Decentralized" is a spectrum, not a badge — many Web3 apps still depend on centralized RPC
+             providers, front-ends, or admin keys that can pause or upgrade the contract. Token incentives
+             also invite speculation and ponzi-like designs; read tokenomics the way you'd read a balance
+             sheet, and watch for AMM <em>impermanent loss</em> on the LP side.</p>
+        </div>
         <div class="readings"><b>Readings</b>
           <ul>
-            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — essays on the philosophy and social layer of blockchains.</li>
-            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps) for the Web3 stack.</li>
+            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — essays on the philosophy and social layer of blockchains; the best framing for "what is Web3 actually for".</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps) for the concrete Web3 stack underneath the vision.</li>
           </ul>
+        </div>
+        <div class="connects"><span class="clabel">Key takeaway</span>
+          <p>This is the last lecture before the guest series — it's deliberately a synthesis, pulling
+             tokens (S7), DAOs (S8), privacy/scaling (S10) into one picture of where the ecosystem is going,
+             which is exactly the lens to bring to the capstone paper.</p>
         </div>
         <div class="playlinks"><span class="plabel">Play with it:</span>
           <a href="./index.html#amm">AMM / DeFi (x·y=k)</a>
@@ -804,11 +1288,21 @@
         <h4>Fintech guest lecture I</h4>
         <p class="obj">Objective: hear an industry/applied perspective on blockchain &amp; fintech; paper candidates begin to be distributed.</p>
         <ul class="topics">
-          <li><b>Guest perspective.</b> A practitioner view connecting course theory to real fintech systems.</li>
-          <li><b>Capstone kickoff.</b> Candidate research papers for the final group analysis start being shared (sessions 12–14).</li>
+          <li><b>Guest perspective.</b> A practitioner view connecting course theory to real fintech systems
+              — payments, settlement, custody, tokenisation, or regulation in the wild. <em>Why it
+              matters:</em> it grounds the protocol-level material in the constraints (compliance, UX, risk)
+              that decide what actually ships.</li>
+          <li><b>Capstone kickoff.</b> The first batch of candidate research papers for the final group
+              analysis is shared; start skimming abstracts now to find a topic your group cares about.</li>
         </ul>
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Start reading early: the best capstone presentations choose their paper in week 12, not week 14.</p>
+        </div>
+        <div class="tips"><b>How to prepare</b>
+          <ul>
+            <li>Bring one question that links the guest's domain to a concept from Sessions 1–11.</li>
+            <li>Log every candidate paper's title, venue and year — you'll compare them as a group later.</li>
+          </ul>
         </div>
       </div>
 
@@ -817,9 +1311,17 @@
         <h4>Fintech guest lecture II</h4>
         <p class="obj">Objective: continue building the industry/fintech picture; refine paper selection.</p>
         <ul class="topics">
-          <li><b>Guest perspective.</b> A second applied fintech viewpoint.</li>
-          <li><b>Paper candidates.</b> Further research-paper options provided for the capstone.</li>
+          <li><b>Guest perspective.</b> A second applied fintech viewpoint — likely a different vertical
+              (e.g. DeFi/CBDCs/RegTech) so the cohort sees the breadth of where blockchain meets finance.</li>
+          <li><b>Paper candidates.</b> Further research-paper options provided; by now your group should be
+              shortlisting two or three and reading their introductions and results sections.</li>
         </ul>
+        <div class="tips"><b>How to prepare</b>
+          <ul>
+            <li>Shortlist papers by what your group can critique credibly, not just by buzz.</li>
+            <li>Check each paper is peer-reviewed and recent enough to matter, but old enough to have follow-ups.</li>
+          </ul>
+        </div>
       </div>
 
       <div class="sess guest">
@@ -827,9 +1329,17 @@
         <h4>Fintech guest lecture III</h4>
         <p class="obj">Objective: final guest perspective and finalize the choice of capstone paper.</p>
         <ul class="topics">
-          <li><b>Guest perspective.</b> A third fintech/industry lecture.</li>
-          <li><b>Lock the paper.</b> Last batch of candidate papers; groups confirm their selection.</li>
+          <li><b>Guest perspective.</b> A third fintech/industry lecture — often the most forward-looking,
+              covering emerging risks or the regulatory horizon.</li>
+          <li><b>Lock the paper.</b> Last batch of candidate papers; groups confirm their selection and
+              start dividing the SWOT axes among members so each person owns part of the analysis.</li>
         </ul>
+        <div class="tips"><b>How to prepare</b>
+          <ul>
+            <li>Confirm your paper today — session 15 is one week away and the analysis takes real time.</li>
+            <li>Assign roles: who reads method vs results, who builds slides, who rehearses the talk.</li>
+          </ul>
+        </div>
       </div>
 
       <div class="sess guest">
@@ -851,6 +1361,20 @@
         <div class="keyidea"><span class="clabel">Key idea</span>
           <p>Note the GenAI policy: presentations and group submissions must be your own — AI tools are not
              permitted for this component.</p>
+        </div>
+        <div class="tips"><b>Presentation tips (40% of the grade)</b>
+          <ul>
+            <li><b>Lead with the contribution.</b> In one slide, state what the paper claims and why it
+                matters before you critique it.</li>
+            <li><b>Be specific in the SWOT.</b> "Weak evaluation" is empty; "tested only on a 4-node
+                private chain, so the scalability claim is unsupported" is a real critique.</li>
+            <li><b>Connect back to the course.</b> Tie the paper to the exact concept it builds on
+                (consensus, ZK, the account model) — graders reward synthesis.</li>
+            <li><b>Rehearse the timing and the handoffs.</b> Five speakers means four transitions; practise
+                them so the talk flows.</li>
+            <li><b>Anticipate questions.</b> Know the paper's threat model and its one biggest assumption
+                cold — that's where the questions land.</li>
+          </ul>
         </div>
       </div>
 
@@ -897,6 +1421,30 @@
     <dl class="term"><dt>Layer-2 / rollup</dt><dd>Off-chain execution posting compressed state to L1; optimistic (fraud proofs) vs ZK (validity proofs).</dd></dl>
     <dl class="term"><dt>Zero-knowledge proof</dt><dd>A proof that a statement is true revealing nothing else; powers privacy and ZK-rollups (zk-SNARK/STARK).</dd></dl>
     <dl class="term"><dt>Web3</dt><dd>A user-owned web of portable tokens, identities, and open protocols, coordinated by token economics.</dd></dl>
+    <dl class="term"><dt>Genesis block</dt><dd>The first block of a chain (height 0), hard-coded with no parent; the anchor every other block ultimately links back to.</dd></dl>
+    <dl class="term"><dt>Block header</dt><dd>The compact summary of a block (prev-hash, Merkle root, timestamp, nonce, target) — all an SPV client needs to verify proofs.</dd></dl>
+    <dl class="term"><dt>secp256k1</dt><dd>The specific elliptic curve used by Bitcoin and Ethereum for ECDSA keys and signatures.</dd></dl>
+    <dl class="term"><dt>Seed phrase (BIP-39)</dt><dd>12–24 human-readable words that encode the master seed of an HD wallet; whoever holds it controls every derived key.</dd></dl>
+    <dl class="term"><dt>Hot vs cold wallet</dt><dd>Hot wallets are connected to the internet (convenient, exposed); cold wallets stay offline/hardware (safer, slower).</dd></dl>
+    <dl class="term"><dt>Custodial vs self-custody</dt><dd>A custodian (e.g. an exchange) holds your keys for you; self-custody means you alone hold them — "not your keys, not your coins".</dd></dl>
+    <dl class="term"><dt>Finality</dt><dd>The point at which a block is irreversible: probabilistic in PoW (more confirmations), explicit/checkpointed in Ethereum PoS.</dd></dl>
+    <dl class="term"><dt>Slashing</dt><dd>The PoS penalty that destroys part of a validator's stake for provable misbehaviour (double-signing, equivocation).</dd></dl>
+    <dl class="term"><dt>Validator</dt><dd>A PoS participant who stakes capital to propose and attest blocks, earning rewards and risking slashing.</dd></dl>
+    <dl class="term"><dt>EOA</dt><dd>Externally-Owned Account — an Ethereum account controlled by a private key (balance + nonce), as opposed to a contract account.</dd></dl>
+    <dl class="term"><dt>ABI</dt><dd>Application Binary Interface — the JSON description of a contract's functions/events that lets a Dapp encode calls to it.</dd></dl>
+    <dl class="term"><dt>msg.sender</dt><dd>In Solidity, the address that called the current function — the basis of ownership and access control.</dd></dl>
+    <dl class="term"><dt>Re-entrancy</dt><dd>An attack where a called contract calls back in before state is updated; mitigated by the checks-effects-interactions pattern.</dd></dl>
+    <dl class="term"><dt>require / revert</dt><dd>Solidity guard that aborts and rolls back the whole transaction (atomically) when a condition fails.</dd></dl>
+    <dl class="term"><dt>Testnet</dt><dd>A practice network (e.g. Sepolia) with free faucet ETH for rehearsing deploys before risking real value on mainnet.</dd></dl>
+    <dl class="term"><dt>Gwei</dt><dd>A denomination of ETH (10⁻⁹ ETH) used to quote gas prices.</dd></dl>
+    <dl class="term"><dt>Timelock</dt><dd>A delay between a DAO proposal passing and executing, giving members time to react or exit.</dd></dl>
+    <dl class="term"><dt>Quorum</dt><dd>The minimum participation/votes a DAO proposal needs to be valid, preventing low-turnout capture.</dd></dl>
+    <dl class="term"><dt>zk-SNARK / zk-STARK</dt><dd>Succinct ZK proof systems; SNARKs are tiny but need a trusted setup, STARKs need none and are post-quantum but larger.</dd></dl>
+    <dl class="term"><dt>Trusted setup</dt><dd>A one-time ceremony generating SNARK parameters; its secret "toxic waste" must be destroyed or proofs can be forged.</dd></dl>
+    <dl class="term"><dt>Oracle</dt><dd>A service that feeds trusted off-chain data (prices, events) to contracts, which otherwise can't see the outside world.</dd></dl>
+    <dl class="term"><dt>IPFS</dt><dd>A content-addressed P2P storage network commonly used to host NFT metadata and Dapp front-ends off-chain.</dd></dl>
+    <dl class="term"><dt>Impermanent loss</dt><dd>The opportunity cost an AMM liquidity provider suffers when pool prices diverge from just holding the two assets.</dd></dl>
+    <dl class="term"><dt>Double-spend</dt><dd>Spending the same coin twice; preventing it without a central authority is the core problem blockchains solve.</dd></dl>
   </div>
 </section>
 
