@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Course Structure — Blockchain, Cryptocurrencies & Fintech</title>
+<meta name="description" content="Syllabus-driven course structure for Blockchain, Cryptocurrencies & Fintech (BCSAI, IE University): objectives, methodology, assessment, the full 15-session program, key concepts and bibliography." />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---- course-page-only additions (kept self-contained; reuse the shared palette) ---- */
+.crumbs{font-size:12px;color:var(--mute);margin:0 0 6px}
+.crumbs a{color:var(--accent2);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.lead{color:var(--mute);font-size:15px;max-width:75ch}
+
+.metagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:16px}
+.metagrid .mcell{background:var(--tile);border:1px solid var(--line);border-radius:10px;padding:12px}
+.metagrid .mcell b{display:block;color:var(--mute);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.metagrid .mcell span{color:var(--ink);font-size:14px}
+
+.objlist{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:10px}
+.objlist li{background:var(--code);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:12px 14px}
+.objlist li b{color:var(--accent)}
+
+/* percentage bars */
+.barrow{display:flex;flex-direction:column;gap:3px;margin:10px 0}
+.barrow .barlabel{display:flex;justify-content:space-between;font-size:13px}
+.barrow .barlabel span:last-child{color:var(--accent);font-weight:600}
+.pbar{background:var(--code);border:1px solid var(--line);border-radius:999px;height:16px;overflow:hidden}
+.pbar > div{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+
+.compgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:16px 0}
+.compcard{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px}
+.compcard .pct{font-size:26px;color:var(--accent);font-weight:700}
+.compcard h4{margin:2px 0 6px;color:var(--ink);font-size:15px}
+.compcard p{margin:0;color:var(--mute);font-size:13px}
+
+.rulebox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px}
+.rulebox h4{margin:0 0 6px;color:var(--accent)}
+.rulebox ul{margin:6px 0 0;padding-left:18px;color:var(--mute);font-size:13px}
+.rulebox ul li{margin:4px 0}
+
+/* module blocks */
+.module{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0;overflow:hidden;margin-bottom:20px}
+.module > .modhead{padding:18px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel))}
+.module > .modhead h3{margin:0;color:var(--accent);font-size:18px}
+.module > .modhead .modmeta{color:var(--mute);font-size:12px;margin-top:4px}
+.module > .modhead p{margin:10px 0 0;color:var(--mute);font-size:14px;max-width:80ch}
+.module .outcomes{margin:10px 0 0;padding:10px 14px;background:var(--code);border:1px solid var(--line);border-radius:8px}
+.module .outcomes b{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.module .outcomes ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--ink)}
+.module .outcomes ul li{margin:3px 0}
+.module .modbody{padding:8px 22px 18px}
+
+/* session timeline */
+.tl{position:relative;margin:0;padding:0 0 0 30px;border-left:2px solid var(--line)}
+.tl .sess{position:relative;padding:16px 0 4px}
+.tl .sess::before{content:"";position:absolute;left:-39px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--accent2);border:3px solid var(--bg)}
+.tl .sess.guest::before{background:var(--warn)}
+.sess .snum{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:999px;font-size:11px;padding:2px 10px;color:var(--accent);font-weight:600;margin-right:8px}
+.sess .stag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:var(--panel2);color:var(--mute);margin-left:4px}
+.sess .stag.live{color:var(--accent2)}
+.sess .stag.ex{color:var(--warn)}
+.sess h4{margin:8px 0 4px;font-size:16px;color:var(--ink)}
+.sess .obj{color:var(--mute);font-size:13px;font-style:italic;margin:0 0 8px}
+.sess .topics{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.sess .topics > li{font-size:13px;color:var(--ink)}
+.sess .topics > li b{color:var(--accent)}
+
+.concept{background:var(--code);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:8px;padding:10px 12px;margin:8px 0}
+.concept .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);font-weight:600}
+.concept p{margin:4px 0 0;font-size:13px;color:var(--ink)}
+.concept code{background:var(--panel2);padding:1px 5px;border-radius:4px}
+
+.keyidea{background:#13251f;border:1px solid #1f4036;border-radius:8px;padding:10px 12px;margin:10px 0}
+.keyidea .clabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.keyidea p{margin:4px 0 0;font-size:13px;color:#cdeede}
+
+.readings{margin:10px 0 0;padding:10px 12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px}
+.readings b{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.readings ul{margin:6px 0 0;padding-left:18px;font-size:12px;color:var(--mute)}
+.readings ul li{margin:3px 0}
+
+.playlinks{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.playlinks a{font-size:11px;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--accent2)}
+.playlinks a:hover{border-color:var(--accent);color:var(--accent)}
+.playlinks .plabel{font-size:11px;color:var(--mute);align-self:center;margin-right:2px}
+
+/* glossary */
+.glossary{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:14px}
+.term{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.term dt{color:var(--accent);font-weight:600;font-size:14px}
+.term dd{margin:4px 0 0;color:var(--mute);font-size:13px}
+
+/* bibliography */
+.biblio{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:12px}
+.biblio li{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px}
+.biblio .bt{color:var(--ink);font-weight:600}
+.biblio .ba{color:var(--mute);font-size:13px}
+.biblio .bn{color:var(--mute);font-size:12px;font-style:italic;margin-top:6px}
+.biblio .isbn{font-family:ui-monospace,monospace;font-size:11px;color:var(--accent2)}
+
+.section-intro{color:var(--mute);max-width:80ch}
+.anchor-offset{scroll-margin-top:120px}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⛓</span>
+    <div>
+      <h1>Course Structure</h1>
+      <p class="subtitle">Blockchain, Cryptocurrencies &amp; Fintech — a syllabus-driven walkthrough.</p>
+    </div>
+  </div>
+  <nav class="sessions">
+    <a href="./index.html">← Playground</a>
+    <a href="#overview">Overview</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#assessment">Assessment</a>
+    <a href="#program">Program</a>
+    <a href="#concepts">Key concepts</a>
+    <a href="#bibliography">Bibliography</a>
+    <a href="./SYLLABUS.pdf">PDF syllabus ↧</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- OVERVIEW -->
+<section id="overview" class="card hero anchor-offset">
+  <p class="crumbs"><a href="./index.html">Interactive playground</a> · Course structure</p>
+  <h2>Blockchain, Cryptocurrencies &amp; Fintech</h2>
+  <p class="lead">This page is the academic companion to the
+     <a href="./index.html">interactive playground</a>. It reconstructs the official IE University
+     syllabus into a navigable map: what the course is about, how it is taught and graded, and a deep
+     pass through all <strong>15 live sessions</strong> — each broken down into its objective, the
+     concepts it introduces, a one-sentence "key idea", suggested readings, and links to the matching
+     hands-on demos. Where a topic is technical (hashing, ECDSA, the UTXO model, the EVM, Solidity,
+     consensus, ZK proofs) a short definition box gives you the precise mental model to carry into class.</p>
+
+  <div class="metagrid">
+    <div class="mcell"><b>Degree</b><span>BCSAI — Bachelor in Computer Science &amp; AI</span></div>
+    <div class="mcell"><b>Course code</b><span>BCF-CSAI.4.M.A</span></div>
+    <div class="mcell"><b>Area</b><span>Computer Science</span></div>
+    <div class="mcell"><b>Year · Semester</b><span>4th year · 2nd semester</span></div>
+    <div class="mcell"><b>Credits</b><span>3.0 ECTS</span></div>
+    <div class="mcell"><b>Sessions</b><span>15 (live, in-person)</span></div>
+    <div class="mcell"><b>Category</b><span>Compulsory</span></div>
+    <div class="mcell"><b>Language</b><span>English</span></div>
+    <div class="mcell"><b>Academic year</b><span>2025–26</span></div>
+    <div class="mcell"><b>Professor</b><span>Dr. Milan Groshev</span></div>
+    <div class="mcell"><b>Contact</b><span>mgroshev@faculty.ie.edu</span></div>
+    <div class="mcell"><b>Office hours</b><span>On request (by email)</span></div>
+  </div>
+
+  <h3 style="margin-top:22px">Subject description</h3>
+  <p class="section-intro">Bitcoin and other cryptographic currencies have gained attention over the
+     years as the systems continue to evolve. This course examines the design of the underlying
+     mechanism behind Bitcoin and other cryptocurrencies: the <em>blockchain</em>. It focuses on how
+     blockchains function in practice — through <strong>cryptography</strong>,
+     <strong>programming</strong>, and <strong>network architecture</strong> — and looks ahead to future
+     developments in smart contracts and privacy. Programming assignments throughout the term turn the
+     theory into practical experience interacting with these currencies and protocols.</p>
+
+  <div class="rulebox">
+    <h4>GenAI policy</h4>
+    <p style="margin:0;color:var(--mute);font-size:13px">Generative AI tools may be used for assignments
+       and code writing <em>with appropriate acknowledgement</em>. GenAI may <strong>not</strong> be used
+       for presentations, group submissions, or exams. Inappropriate use of AI-generated content is
+       treated as academic misconduct and can mean failing the assignment or the course.</p>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section id="objectives" class="card anchor-offset">
+  <h2>Learning objectives</h2>
+  <p class="section-intro">By the end of the course, students should be able to:</p>
+  <ul class="objlist">
+    <li><b>Understand the foundations.</b> Explain the basic concepts behind modern blockchain-based
+        systems — cryptographic ledgers, hashing, digital signatures, consensus, and the
+        transaction/account models that Bitcoin and Ethereum use.</li>
+    <li><b>Program &amp; simulate.</b> Write and simulate custom programs — i.e.
+        <em>smart contracts</em> — for currency and for the formalization of consensus rules, deploying
+        and interacting with them on public blockchains.</li>
+    <li><b>Read the research.</b> Engage with the latest blockchain research and develop the ability to
+        critically analyze academic papers in the crypto ecosystem (the basis for the final group
+        SWOT-style paper analysis).</li>
+  </ul>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology" class="card anchor-offset">
+  <h2>Teaching methodology</h2>
+  <p class="section-intro">IE University's teaching method is <strong>collaborative, active, and
+     applied</strong>: students participate throughout to build knowledge and sharpen skills, while the
+     professor leads and guides toward the learning objectives. The course mixes lectures, discussions,
+     in-class and asynchronous exercises, fieldwork, group work, and independent study. The figures
+     below are the weight of each activity in the workload and the estimated student time it represents
+     (75 hours total for a 3-ECTS course).</p>
+
+  <div class="barrow"><div class="barlabel"><span>Lectures</span><span>20.0% · 15h</span></div><div class="pbar"><div style="width:20%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Discussions</span><span>13.3% · 10h</span></div><div class="pbar"><div style="width:13.3%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Exercises in class, asynchronous sessions, field work</span><span>33.3% · 25h</span></div><div class="pbar"><div style="width:33.3%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Group work</span><span>13.3% · 10h</span></div><div class="pbar"><div style="width:13.3%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Individual studying</span><span>20.0% · 15h</span></div><div class="pbar"><div style="width:20%"></div></div></div>
+
+  <p class="note">Applied work dominates: a third of the effort is hands-on exercises and fieldwork —
+     which is exactly what the <a href="./index.html">interactive playground</a> is designed to support.</p>
+</section>
+
+<!-- ASSESSMENT -->
+<section id="assessment" class="card anchor-offset">
+  <h2>Assessment &amp; evaluation</h2>
+  <p class="section-intro">The grade is built from three components. At the end of each of sessions
+     2–11 a programming exercise is released (due at the start of the next session); these
+     <em>intermediate exercises</em> are the largest single component. The course culminates in a group
+     research-paper analysis presented in session 15.</p>
+
+  <div class="barrow"><div class="barlabel"><span>Intermediate exercises</span><span>50%</span></div><div class="pbar"><div style="width:50%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Group presentation</span><span>40%</span></div><div class="pbar"><div style="width:40%"></div></div></div>
+  <div class="barrow"><div class="barlabel"><span>Class participation</span><span>10%</span></div><div class="pbar"><div style="width:10%"></div></div></div>
+
+  <div class="compgrid">
+    <div class="compcard">
+      <div class="pct">50%</div>
+      <h4>Intermediate exercises</h4>
+      <p>Programming exercises released at the end of sessions 2 through 11, each due at the beginning of
+         the following session. They demonstrate proficiency with blockchain tools and programming
+         frameworks (hashing, signatures, consensus, Bitcoin/Ethereum tooling, Solidity, DAOs/Dapps,
+         ZK proofs, Web3).</p>
+    </div>
+    <div class="compcard">
+      <div class="pct">40%</div>
+      <h4>Group presentation</h4>
+      <p>A ~5-student group picks a blockchain research paper (candidates supplied across sessions
+         12–14) and presents a deep scientific analysis in session 15 — covering the strengths,
+         weaknesses, opportunities, and threats (SWOT) of the chosen paper.</p>
+    </div>
+    <div class="compcard">
+      <div class="pct">10%</div>
+      <h4>Class participation</h4>
+      <p>Active engagement in the live in-person sessions: discussion, in-class exercises, and
+         contribution to the collaborative, applied format of the course.</p>
+    </div>
+  </div>
+
+  <div class="rulebox">
+    <h4>Pass, attendance &amp; re-sit rules</h4>
+    <ul>
+      <li><b>Attendance:</b> students who do not meet the <strong>80% attendance</strong> rule fail
+          <em>both</em> the ordinary and extraordinary calls for the year and must re-take (re-enroll)
+          the next academic year.</li>
+      <li><b>Four calls:</b> each student has four chances to pass a course across two consecutive
+          academic years — ordinary and extraordinary (June/July re-sit) calls.</li>
+      <li><b>Ordinary fail → re-sit:</b> failing in the ordinary call means re-sitting in June/July
+          (unless barred by the attendance rule, which forces a re-enroll instead).</li>
+      <li><b>Re-sit format:</b> the June/July extraordinary call is a single comprehensive exam,
+          physically on campus (Segovia or Madrid). The grade depends on that exam <em>only</em>
+          (continuous evaluation is not counted), with a minimum pass of <strong>5</strong> and a
+          maximum of <strong>8.0</strong> ("notable").</li>
+      <li><b>Retakers:</b> students re-enrolled after failing a previous year must check the assigned
+          professor's syllabus and contact them about specific criteria; the maximum grade in the 3rd
+          call (retake exam) is 10.0.</li>
+      <li><b>Review &amp; appeals:</b> a review session follows grading; attending it is a prerequisite
+          for any grade appeal. Failing &gt;18 ECTS in the year after the re-sits means leaving the
+          program.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program" class="card anchor-offset">
+  <h2>Program — the 15 sessions</h2>
+  <p class="section-intro">All 15 sessions are live and in-person. The arc runs from cryptographic
+     primitives → consensus → Bitcoin → Ethereum &amp; smart contracts → DAOs/Dapps → privacy (ZK) →
+     Web3 → fintech guest lectures. Programming exercises accompany sessions 2–11. Below, each session
+     is expanded with its objective, the concepts it covers, a key idea, readings, and links into the
+     matching interactive demos.</p>
+</section>
+
+<!-- MODULE A: Foundations -->
+<div class="module anchor-offset" id="mod-foundations">
+  <div class="modhead">
+    <h3>Module A · Cryptographic foundations &amp; consensus</h3>
+    <div class="modmeta">Sessions 1–3 · the primitives that make a tamper-evident ledger possible</div>
+    <p>Before any "coin" exists there is a data structure and some cryptography. This module builds the
+       intuition for what a blockchain <em>is</em> — an append-only, tamper-evident ledger — and the two
+       pillars that secure it: cryptographic hashing/signatures, and a consensus rule for agreeing on
+       one history without a central authority.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Describe a blockchain as a hash-linked, tamper-evident sequence of records.</li>
+        <li>Explain public-key cryptography, ECDSA signatures, and the avalanche property of hashes.</li>
+        <li>Compare Proof of Work and Proof of Stake on security, scalability, energy and finality.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess">
+        <span class="snum">Session 1</span><span class="stag live">Live in-person</span>
+        <h4>Introduction to cryptographic ledgers (blockchain)</h4>
+        <p class="obj">Objective: establish what a blockchain is and frame the research landscape of the field.</p>
+        <ul class="topics">
+          <li><b>The cryptographic ledger.</b> A tamper-proof sequence of data that any user can read and
+              append to — no trusted central operator required.</li>
+          <li><b>Course framing.</b> The instructor's background in blockchain research and a tour of the
+              latest advances in blockchain and cryptocurrencies.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Blockchain</span>
+          <p>A <strong>blockchain</strong> is an append-only ledger of blocks, where each block stores the
+             cryptographic hash of the previous one. Because changing any historical record changes its
+             hash — and therefore every later block's "previous-hash" link — tampering is immediately
+             detectable. Trust comes from data structure + cryptography + consensus, not from an
+             institution.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>A blockchain replaces "trust the operator" with "verify the math": the chain is its own
+             audit trail.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 1 (What is Bitcoin?) for the big picture.</li>
+            <li>Nakamoto (2008), <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> — the original framing of a chained, timestamped ledger.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#blockchain">Block chain visualiser</a>
+          <a href="./index.html#intro">Concept roadmap</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 2</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Signatures, hashing &amp; hash chains</h4>
+        <p class="obj">Objective: master the cryptographic primitives that give blockchains their security and privacy.</p>
+        <ul class="topics">
+          <li><b>Hashing algorithms.</b> One-way functions (e.g. SHA-256) producing fixed-size digests with the avalanche effect.</li>
+          <li><b>Public-key cryptography.</b> Keypairs where a private key signs and a public key verifies.</li>
+          <li><b>ECDSA.</b> The Elliptic Curve Digital Signature Algorithm used by Bitcoin (secp256k1) and Ethereum.</li>
+          <li><b>Hash chains.</b> Linking records by hash so the sequence becomes tamper-evident.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Cryptographic hash</span>
+          <p>A hash function maps arbitrary input to a fixed-length fingerprint such that it is infeasible
+             to invert or to find two inputs with the same output (collision resistance). A one-bit change
+             flips ~50% of output bits — the <strong>avalanche effect</strong> — which is why hashes detect
+             tampering and bind blocks together.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · Digital signature (ECDSA)</span>
+          <p>A wallet stores a <strong>private key</strong>, not coins. Signing a message with it produces
+             a signature anyone can check with the matching <strong>public key</strong> — proving
+             authorization without revealing the secret. This is how a transaction proves "the owner
+             approved this spend".</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Hashes make data tamper-evident; signatures make actions un-forgeable. Together they replace
+             account passwords with provable authorization.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 4 (Keys, Addresses) on ECDSA &amp; hashing.</li>
+            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — formal grounding for one-way functions and signatures.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#hash">SHA-256 + avalanche</a>
+          <a href="./index.html#signatures">ECDSA sign &amp; verify</a>
+          <a href="./index.html#merkle">Merkle trees</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 3</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Proof of Work vs Proof of Stake</h4>
+        <p class="obj">Objective: deep-dive into the two dominant consensus models and weigh their trade-offs.</p>
+        <ul class="topics">
+          <li><b>Proof of Work (Bitcoin).</b> Miners verify new transactions by expending hashing work;
+              secure but with serious scalability/performance/energy costs.</li>
+          <li><b>Proof of Stake (Ethereum).</b> Validators are chosen and penalised by economic stake,
+              aiming to overcome PoW's limits — while opening new security questions as it matures.</li>
+          <li><b>Trade-offs.</b> Spotting the advantages and disadvantages of each model.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Proof of Work</span>
+          <p>Block producers search for a nonce so that <code>SHA-256(block) &lt; target</code>. Finding it
+             is hard (costs energy) but verifying it is trivial. Honest history is the one with the most
+             cumulative work, so attacking it means out-hashing the whole network (~a 51% attack).</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · Proof of Stake</span>
+          <p>Validators lock up (stake) capital and are pseudo-randomly chosen to propose/attest blocks.
+             Misbehaviour is punished by <strong>slashing</strong> their stake. Security comes from
+             economic skin-in-the-game rather than energy; Ethereum's 2022 "Merge" cut energy use ~99.95%.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>PoW buys security with electricity; PoS buys it with at-risk capital. Both make rewriting
+             history more expensive than it's worth.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — the philosophy and design of PoS.</li>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 10 (Mining &amp; Consensus).</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#mining">Mine a block (PoW)</a>
+          <a href="./index.html#consensus">PoW vs PoS comparison</a>
+          <a href="./index.html#blockchain">Difficulty &amp; re-mining</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODULE B: Bitcoin -->
+<div class="module anchor-offset" id="mod-bitcoin">
+  <div class="modhead">
+    <h3>Module B · Bitcoin: from core concepts to advanced features</h3>
+    <div class="modmeta">Sessions 4–5 · the first decentralized digital currency, in depth</div>
+    <p>With the primitives in place, the course turns to Bitcoin itself: how value is represented and
+       moved without accounts (the UTXO model), how nodes verify and synchronize the ledger, and the
+       advanced machinery — light clients, wallet types, data embedding — that production systems use.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Explain Bitcoin transaction verification and the public distributed ledger.</li>
+        <li>Reason about the UTXO model, node synchronization, and pruning.</li>
+        <li>Describe SPV light clients, wallet types, and <code>OP_RETURN</code>/Catena data anchoring.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess">
+        <span class="snum">Session 4</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Bitcoin introduction &amp; core concepts</h4>
+        <p class="obj">Objective: understand Bitcoin as the first decentralized digital currency and its building blocks.</p>
+        <ul class="topics">
+          <li><b>Transaction verification.</b> Network nodes validate transactions cryptographically.</li>
+          <li><b>Public distributed ledger.</b> Every full node holds and checks the shared history.</li>
+          <li><b>UTXO model.</b> Bitcoin tracks unspent outputs, not balances.</li>
+          <li><b>Synchronization &amp; pruning.</b> How nodes catch up and how they discard spent data to save space.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · UTXO model</span>
+          <p>Bitcoin has no account balances. The ledger is a set of <strong>Unspent Transaction
+             Outputs</strong>. To pay, you consume whole UTXOs as <em>inputs</em> and create new UTXOs as
+             <em>outputs</em> — typically one to the recipient and one back to yourself as
+             <strong>change</strong>. Your "balance" is just the sum of UTXOs you can unlock.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · Pruning</span>
+          <p>A pruned node validates the full chain but then discards old block data it no longer needs,
+             keeping only the UTXO set and recent blocks — letting it run on modest hardware while still
+             enforcing all rules.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>In Bitcoin you don't "have a balance" — you hold a pocketful of unspent coins and spend them
+             whole, making change like cash.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 6 (Transactions) &amp; Ch. 2 (How Bitcoin Works).</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#utxo">UTXO transaction builder</a>
+          <a href="./index.html#halving">Supply schedule &amp; halving</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 5</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Bitcoin advanced concepts &amp; programming exercise</h4>
+        <p class="obj">Objective: go beyond the basics into the tooling and extensions of the Bitcoin protocol.</p>
+        <ul class="topics">
+          <li><b>SPV (Simplified Payment Verification).</b> Light clients that verify payments using block headers + Merkle proofs, without the full chain.</li>
+          <li><b>Wallet types.</b> Non-deterministic vs deterministic (HD/BIP-32) wallets, hot vs cold, custodial vs self-custody.</li>
+          <li><b>OP_RETURN.</b> A script opcode for embedding a small, provably-unspendable data payload in a transaction.</li>
+          <li><b>Catena.</b> Anchoring an auditable log to Bitcoin via OP_RETURN commitments.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · SPV &amp; Merkle proofs</span>
+          <p>An SPV client downloads only block <em>headers</em>. To check that a transaction is included
+             in a block it requests a <strong>Merkle proof</strong> — the handful of sibling hashes needed
+             to recompute the block's Merkle root. This verifies membership in <em>O(log n)</em> hashes
+             instead of downloading every transaction.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · HD wallets &amp; OP_RETURN</span>
+          <p>A <strong>hierarchical-deterministic wallet</strong> derives millions of keypairs from one
+             seed phrase (BIP-32/39/44). <code>OP_RETURN</code> lets a transaction carry up to ~80 bytes of
+             arbitrary data, useful for timestamping/anchoring external records on-chain.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>You don't need the whole blockchain to trust a payment — a Merkle proof against a header is
+             enough, which is what makes phone wallets possible.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos, <em>Mastering Bitcoin</em> — Ch. 5 (Wallets), Ch. 8 (SPV &amp; the Network).</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#wallet">Wallets &amp; addresses</a>
+          <a href="./index.html#merkle">Merkle proofs</a>
+          <a href="./index.html#forks">Forks &amp; upgrades (SegWit, Taproot)</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODULE C: Ethereum & Smart Contracts -->
+<div class="module anchor-offset" id="mod-ethereum">
+  <div class="modhead">
+    <h3>Module C · Ethereum &amp; smart contracts</h3>
+    <div class="modmeta">Sessions 6–7 · the programmable blockchain</div>
+    <p>Ethereum generalises the blockchain from "money" to "any program". This module introduces smart
+       contracts as deterministic on-chain code and Solidity as the language to write them — the
+       foundation for everything from tokens to DeFi to DAOs.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Explain smart contracts as deterministic "if this then that" programs stored on-chain.</li>
+        <li>Distinguish EOAs from contract accounts and understand gas as a metering mechanism.</li>
+        <li>Read and write basic Solidity, deploy a contract, and call its functions.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess">
+        <span class="snum">Session 6</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Ethereum &amp; smart contracts fundamentals</h4>
+        <p class="obj">Objective: introduce smart contracts as the foundation of Ethereum's application layer.</p>
+        <ul class="topics">
+          <li><b>Smart contracts.</b> Programs stored on the blockchain that follow "if this then that"
+              logic and are guaranteed to execute exactly as their code defines.</li>
+          <li><b>Application layer.</b> How contracts compose into the dApp/DeFi ecosystem.</li>
+          <li><b>Account model.</b> Ethereum's accounts (EOA vs contract), balances, and nonces vs Bitcoin's UTXOs.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Smart contract</span>
+          <p>A <strong>smart contract</strong> is code deployed to an address on the blockchain. Anyone can
+             call its functions by sending a transaction; the network executes the code deterministically
+             and records the resulting state. There is no "off-switch" — it runs by the rules in its code,
+             which is both its power and its risk.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · Account model &amp; the EVM</span>
+          <p>Ethereum has two account types: <strong>EOAs</strong> (controlled by a private key; balance +
+             nonce) and <strong>contract accounts</strong> (code + storage). All execution happens in the
+             <strong>EVM</strong>, a deterministic stack machine; every opcode costs <strong>gas</strong>
+             so computation is metered and spam is priced out.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Ethereum is a world computer: a shared state machine where deploying code means publishing an
+             unstoppable, publicly-callable program.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 1–2 (Intro, Ethereum basics) &amp; Ch. 7 (Smart Contracts).</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#accounts">ETH account model</a>
+          <a href="./index.html#evm">EVM opcode walker</a>
+          <a href="./index.html#gas">Gas &amp; EIP-1559 fees</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 7</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Solidity &amp; programming exercise</h4>
+        <p class="obj">Objective: get hands-on with Solidity and the crucial concepts behind programming Ethereum.</p>
+        <ul class="topics">
+          <li><b>Solidity language.</b> Contracts, state variables, functions, visibility, <code>require</code>/modifiers.</li>
+          <li><b>Deployment lifecycle.</b> Compile → deploy → call, and how <code>msg.sender</code> drives access control.</li>
+          <li><b>Token standards.</b> ERC-20 (fungible) and ERC-721 (NFTs) as the canonical contract patterns.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Solidity</span>
+          <p><strong>Solidity</strong> is a statically-typed, contract-oriented language that compiles to
+             EVM bytecode. State variables live in contract storage; <code>require(...)</code> guards
+             enforce conditions and revert the whole transaction (atomically) on failure. The deployer's
+             address arrives as <code>msg.sender</code> in the constructor — the basis of ownership.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · ERC-20 / ERC-721</span>
+          <p><strong>ERC-20</strong> defines fungible tokens via functions like
+             <code>transfer</code>, <code>approve</code>, and <code>transferFrom</code> — the
+             approve/transferFrom pair is what lets DEXes pull your tokens. <strong>ERC-721</strong> gives
+             each <code>tokenId</code> a unique owner, pointing to off-chain metadata (often on IPFS).</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Standards are why composability works: any wallet or contract can talk to any ERC-20/721
+             token because they all expose the same function signatures.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 7 (Smart Contracts &amp; Solidity), Ch. 10 (Tokens).</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#solidity">Deploy a Solidity contract</a>
+          <a href="./index.html#erc20">ERC-20 token</a>
+          <a href="./index.html#nft">NFTs (ERC-721)</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODULE D: DAOs & Dapps -->
+<div class="module anchor-offset" id="mod-daos">
+  <div class="modhead">
+    <h3>Module D · DAOs &amp; decentralized applications</h3>
+    <div class="modmeta">Sessions 8–9 · governance and applications on top of contracts</div>
+    <p>Smart contracts can encode not just tokens but whole organisations. This module covers DAOs as
+       contract-governed entities and Dapps as the user-facing front-ends, then puts it into practice by
+       deploying a DAO and building an app against it.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Explain how a DAO encodes governance and coordination in smart contracts.</li>
+        <li>Describe the architecture of a Dapp (front-end + contracts + wallet/RPC).</li>
+        <li>Deploy a DAO to a public chain and interact with it through a Dapp.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess">
+        <span class="snum">Session 8</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>DAOs: principles &amp; mechanisms · Dapps and DAOs</h4>
+        <p class="obj">Objective: understand DAO governance and how algorithms and people cooperate without a traditional company.</p>
+        <ul class="topics">
+          <li><b>DAO principles.</b> Decentralized Autonomous Organizations governed by smart contracts rather than corporate hierarchy.</li>
+          <li><b>Algorithms + individuals.</b> Coordination and decision-making without incorporation as a legal business entity.</li>
+          <li><b>Dapps and DAOs.</b> The tools and mechanisms to build a DAO, deploy it on a public blockchain, and interface with it through a Dapp.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · DAO</span>
+          <p>A <strong>Decentralized Autonomous Organization</strong> is an entity whose rules — membership,
+             treasury, voting, execution — are encoded in smart contracts. Token holders propose and vote
+             on actions; passing proposals execute on-chain automatically, replacing bylaws and bank
+             signatories with code.</p>
+        </div>
+        <div class="concept"><span class="clabel">Core concept · Dapp</span>
+          <p>A <strong>Dapp</strong> (decentralized application) pairs a normal web front-end with on-chain
+             smart contracts as its backend. The browser talks to the chain through a wallet/RPC provider,
+             so logic and state are public and censorship-resistant rather than living on a private server.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>A DAO is "the company is the contract": governance and money move only when code says a vote
+             passed — no boardroom required.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 9 (Smart Contract Security) &amp; the DAO case study.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#solidity">Contract state &amp; access control</a>
+          <a href="./index.html#accounts">Calling contract functions</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 9</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Deploying DAOs &amp; building Dapps</h4>
+        <p class="obj">Objective: deploy DAOs on public blockchains and interact with them via Dapps.</p>
+        <ul class="topics">
+          <li><b>Deployment.</b> Putting a DAO's governance contracts onto a public chain (testnet/mainnet).</li>
+          <li><b>Dapp integration.</b> Connecting a front-end to the contracts to submit proposals and votes.</li>
+          <li><b>Practical exercise.</b> A programming exercise completing the deploy-and-interact loop.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Deploy &amp; interact loop</span>
+          <p>Deploying writes contract bytecode to a new address (paid in gas); from then on the Dapp builds
+             transactions that call the contract's functions. Reads are free (<em>view</em> calls); writes
+             cost gas and change on-chain state. The same loop underpins every dApp you'll build.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Shipping a Dapp is mostly wiring a UI to function calls — the hard, irreversible part is
+             getting the contract logic right <em>before</em> you deploy.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps) &amp; deployment tooling.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#solidity">Deploy &amp; call (simulated)</a>
+          <a href="./index.html#gas">Cost of deploys &amp; calls</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODULE E: Privacy & Web3 -->
+<div class="module anchor-offset" id="mod-web3">
+  <div class="modhead">
+    <h3>Module E · Privacy &amp; new directions in Web3</h3>
+    <div class="modmeta">Sessions 10–11 · scaling, privacy and the next iteration of the web</div>
+    <p>The frontier of the field: proving things without revealing them (zero-knowledge proofs, which also
+       power ZK-rollups and scaling), and the broader Web3 vision of a decentralized,
+       token-economic internet.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Define a zero-knowledge proof and create/verify a simple one.</li>
+        <li>Connect ZK proofs to privacy and to L2 scaling (ZK-rollups).</li>
+        <li>Articulate what distinguishes Web3 from Web1/Web2 paradigms.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess">
+        <span class="snum">Session 10</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>Zero-knowledge proofs</h4>
+        <p class="obj">Objective: learn to create and verify proofs that reveal nothing beyond a statement's truth.</p>
+        <ul class="topics">
+          <li><b>Prover &amp; verifier.</b> One party convinces another that a statement is true.</li>
+          <li><b>Zero-knowledge property.</b> The verifier learns nothing except that the statement holds.</li>
+          <li><b>Tooling.</b> Mechanisms to construct and check ZK proofs (the basis of ZK-rollups and private transactions).</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Zero-knowledge proof</span>
+          <p>A <strong>zero-knowledge proof</strong> lets a <em>prover</em> convince a <em>verifier</em> that
+             a statement is true while revealing nothing else — not the witness, not the secret. Good ZK
+             systems are <em>complete</em> (true statements verify), <em>sound</em> (false ones don't), and
+             <em>zero-knowledge</em> (no extra information leaks). zk-SNARKs/STARKs make this practical
+             on-chain.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>ZK proofs separate "I can prove it" from "I'll show you how" — enabling both privacy and
+             cheap verification of huge computations (the heart of ZK-rollups).</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Goldreich (2019), <em>Providing Sound Foundations for Cryptography</em> — Goldwasser–Micali and the origins of zero-knowledge.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#rollups">L2 rollups (incl. ZK)</a>
+          <a href="./index.html#merkle">Commitments via hashing</a>
+        </div>
+      </div>
+
+      <div class="sess">
+        <span class="snum">Session 11</span><span class="stag live">Live in-person</span><span class="stag ex">+ programming exercise</span>
+        <h4>New directions in Web3</h4>
+        <p class="obj">Objective: explore the Web3 ecosystem and what sets it apart from earlier web paradigms.</p>
+        <ul class="topics">
+          <li><b>Decentralization.</b> Shifting control from platforms to protocols and users.</li>
+          <li><b>Blockchain technologies.</b> Identity, storage, and composable on-chain services.</li>
+          <li><b>Token-based economics.</b> Tokens as incentives, ownership, and coordination mechanisms.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Core concept · Web3</span>
+          <p><strong>Web3</strong> reframes the web around user-owned data and assets: instead of logging
+             into platforms that own your content (Web2), you hold keys to portable tokens and identities,
+             and apps are built on open, composable protocols. Token economics align incentives between
+             users, builders, and the network itself.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Web1 = read, Web2 = read/write, Web3 = read/write/<em>own</em> — ownership is the new primitive.</p>
+        </div>
+        <div class="readings"><b>Readings</b>
+          <ul>
+            <li>Buterin &amp; Schneider (2022), <em>Proof of Stake</em> — essays on the philosophy and social layer of blockchains.</li>
+            <li>Antonopoulos &amp; Wood, <em>Mastering Ethereum</em> — Ch. 12 (Dapps) for the Web3 stack.</li>
+          </ul>
+        </div>
+        <div class="playlinks"><span class="plabel">Play with it:</span>
+          <a href="./index.html#amm">AMM / DeFi (x·y=k)</a>
+          <a href="./index.html#nft">NFTs &amp; on-chain ownership</a>
+          <a href="./index.html#rollups">Scaling with L2</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODULE F: Fintech guest lectures + capstone -->
+<div class="module anchor-offset" id="mod-fintech">
+  <div class="modhead">
+    <h3>Module F · Fintech guest lectures &amp; research capstone</h3>
+    <div class="modmeta">Sessions 12–15 · industry perspectives and the final group analysis</div>
+    <p>The course closes with three fintech guest lectures bringing industry and applied perspectives,
+       followed by the capstone: a group scientific analysis of a chosen blockchain research paper.
+       Paper candidates are distributed across sessions 12–14 and presented in session 15.</p>
+    <div class="outcomes"><b>Learning outcomes</b>
+      <ul>
+        <li>Connect course concepts to real fintech practice via guest speakers.</li>
+        <li>Select and critically read a blockchain research paper.</li>
+        <li>Present a structured SWOT analysis as a group.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modbody">
+    <div class="tl">
+
+      <div class="sess guest">
+        <span class="snum">Session 12</span><span class="stag live">Live in-person</span>
+        <h4>Fintech guest lecture I</h4>
+        <p class="obj">Objective: hear an industry/applied perspective on blockchain &amp; fintech; paper candidates begin to be distributed.</p>
+        <ul class="topics">
+          <li><b>Guest perspective.</b> A practitioner view connecting course theory to real fintech systems.</li>
+          <li><b>Capstone kickoff.</b> Candidate research papers for the final group analysis start being shared (sessions 12–14).</li>
+        </ul>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Start reading early: the best capstone presentations choose their paper in week 12, not week 14.</p>
+        </div>
+      </div>
+
+      <div class="sess guest">
+        <span class="snum">Session 13</span><span class="stag live">Live in-person</span>
+        <h4>Fintech guest lecture II</h4>
+        <p class="obj">Objective: continue building the industry/fintech picture; refine paper selection.</p>
+        <ul class="topics">
+          <li><b>Guest perspective.</b> A second applied fintech viewpoint.</li>
+          <li><b>Paper candidates.</b> Further research-paper options provided for the capstone.</li>
+        </ul>
+      </div>
+
+      <div class="sess guest">
+        <span class="snum">Session 14</span><span class="stag live">Live in-person</span>
+        <h4>Fintech guest lecture III</h4>
+        <p class="obj">Objective: final guest perspective and finalize the choice of capstone paper.</p>
+        <ul class="topics">
+          <li><b>Guest perspective.</b> A third fintech/industry lecture.</li>
+          <li><b>Lock the paper.</b> Last batch of candidate papers; groups confirm their selection.</li>
+        </ul>
+      </div>
+
+      <div class="sess guest">
+        <span class="snum">Session 15</span><span class="stag live">Live in-person</span>
+        <h4>Final research-paper presentations</h4>
+        <p class="obj">Objective: deliver the group's deep scientific analysis of a chosen blockchain research paper.</p>
+        <ul class="topics">
+          <li><b>Group presentation (~5 students).</b> The 40% capstone component.</li>
+          <li><b>SWOT analysis.</b> A structured examination of the paper's strengths, weaknesses, opportunities, and threats.</li>
+          <li><b>Synthesis.</b> Connecting the paper back to the cryptography, consensus, and smart-contract concepts from across the course.</li>
+        </ul>
+        <div class="concept"><span class="clabel">Capstone · SWOT paper analysis</span>
+          <p>A SWOT analysis frames a research paper along four axes: <strong>S</strong>trengths (what it
+             does well / its contribution), <strong>W</strong>eaknesses (assumptions, gaps, limits),
+             <strong>O</strong>pportunities (follow-on work, applications) and <strong>T</strong>hreats
+             (risks, competing approaches, attack surface). It rewards reading like a reviewer, not a
+             consumer.</p>
+        </div>
+        <div class="keyidea"><span class="clabel">Key idea</span>
+          <p>Note the GenAI policy: presentations and group submissions must be your own — AI tools are not
+             permitted for this component.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- KEY CONCEPTS GLOSSARY -->
+<section id="concepts" class="card anchor-offset">
+  <h2>Key concepts — glossary</h2>
+  <p class="section-intro">A quick-reference for the core vocabulary of the course. Each term links
+     conceptually to a session above and, where applicable, to a live demo in the
+     <a href="./index.html">playground</a>.</p>
+  <div class="glossary">
+    <dl class="term"><dt>Blockchain</dt><dd>An append-only ledger of hash-linked blocks; tampering with any record breaks every later link, making history tamper-evident.</dd></dl>
+    <dl class="term"><dt>Cryptographic hash</dt><dd>A one-way function (e.g. SHA-256) giving a fixed-size fingerprint; collision-resistant, with the avalanche effect.</dd></dl>
+    <dl class="term"><dt>Avalanche effect</dt><dd>A one-bit input change flips ~50% of a hash's output bits — why hashes detect tampering.</dd></dl>
+    <dl class="term"><dt>Public-key cryptography</dt><dd>A keypair where the private key signs/decrypts and the public key verifies/encrypts.</dd></dl>
+    <dl class="term"><dt>ECDSA</dt><dd>Elliptic Curve Digital Signature Algorithm; signs transactions on Bitcoin (secp256k1) and Ethereum.</dd></dl>
+    <dl class="term"><dt>Digital signature</dt><dd>Proof that the holder of a private key authorized a message, verifiable by anyone with the public key.</dd></dl>
+    <dl class="term"><dt>Merkle tree / root</dt><dd>A hash tree summarising many transactions in one root hash; enables compact membership (Merkle) proofs.</dd></dl>
+    <dl class="term"><dt>Nonce</dt><dd>A number miners vary to find a hash below the target (PoW); also a per-account counter on Ethereum to order txs.</dd></dl>
+    <dl class="term"><dt>Proof of Work (PoW)</dt><dd>Consensus by expending hashing energy to find valid blocks; security ∝ cost of out-hashing the network.</dd></dl>
+    <dl class="term"><dt>Proof of Stake (PoS)</dt><dd>Consensus by staking capital; misbehaviour is slashed. Lower energy, faster finality.</dd></dl>
+    <dl class="term"><dt>Mining / difficulty</dt><dd>Searching nonces against a difficulty target; higher difficulty means exponentially more work per block.</dd></dl>
+    <dl class="term"><dt>51% attack</dt><dd>Controlling a majority of hashpower (PoW) or stake (PoS) to rewrite recent history.</dd></dl>
+    <dl class="term"><dt>UTXO</dt><dd>Unspent Transaction Output — Bitcoin's accounting unit; spent whole, with change returned to the sender.</dd></dl>
+    <dl class="term"><dt>SPV</dt><dd>Simplified Payment Verification — a light client verifying payments from block headers + Merkle proofs.</dd></dl>
+    <dl class="term"><dt>HD wallet</dt><dd>Hierarchical-deterministic wallet deriving many keys from one seed (BIP-32/39/44).</dd></dl>
+    <dl class="term"><dt>OP_RETURN</dt><dd>A Bitcoin script opcode embedding a small, unspendable data payload (e.g. for anchoring/timestamping).</dd></dl>
+    <dl class="term"><dt>Fork (soft/hard)</dt><dd>A rule change: soft forks tighten rules (backward-compatible); hard forks are incompatible and can split the chain.</dd></dl>
+    <dl class="term"><dt>Halving</dt><dd>Bitcoin's block reward halves every 210,000 blocks (~4 years), converging on the 21M BTC cap.</dd></dl>
+    <dl class="term"><dt>Account model</dt><dd>Ethereum's alternative to UTXOs: EOAs (key-controlled) and contract accounts (code + storage), each with a balance/nonce.</dd></dl>
+    <dl class="term"><dt>EVM</dt><dd>Ethereum Virtual Machine — the deterministic stack machine that executes contract bytecode.</dd></dl>
+    <dl class="term"><dt>Gas / EIP-1559</dt><dd>The unit metering EVM work; under EIP-1559 the base fee is burned and a priority tip pays the validator.</dd></dl>
+    <dl class="term"><dt>Smart contract</dt><dd>Deterministic code at an address that executes exactly as written when called — "if this then that".</dd></dl>
+    <dl class="term"><dt>Solidity</dt><dd>Ethereum's main contract language, compiled to EVM bytecode; uses <code>require</code>, modifiers, and <code>msg.sender</code>.</dd></dl>
+    <dl class="term"><dt>ERC-20</dt><dd>Fungible-token standard (<code>transfer</code>, <code>approve</code>, <code>transferFrom</code>, …) enabling DeFi composability.</dd></dl>
+    <dl class="term"><dt>ERC-721 (NFT)</dt><dd>Non-fungible token standard; each unique <code>tokenId</code> has one owner and points to off-chain metadata.</dd></dl>
+    <dl class="term"><dt>AMM (x·y=k)</dt><dd>Automated market maker holding two assets at constant product; large trades incur slippage; LPs earn the fee.</dd></dl>
+    <dl class="term"><dt>DeFi</dt><dd>Decentralized finance — lending, trading, and derivatives built from composable token contracts, no intermediary.</dd></dl>
+    <dl class="term"><dt>DAO</dt><dd>Decentralized Autonomous Organization governed by smart-contract rules and token-holder voting.</dd></dl>
+    <dl class="term"><dt>Dapp</dt><dd>Decentralized application: a web front-end backed by on-chain contracts via a wallet/RPC provider.</dd></dl>
+    <dl class="term"><dt>Layer-2 / rollup</dt><dd>Off-chain execution posting compressed state to L1; optimistic (fraud proofs) vs ZK (validity proofs).</dd></dl>
+    <dl class="term"><dt>Zero-knowledge proof</dt><dd>A proof that a statement is true revealing nothing else; powers privacy and ZK-rollups (zk-SNARK/STARK).</dd></dl>
+    <dl class="term"><dt>Web3</dt><dd>A user-owned web of portable tokens, identities, and open protocols, coordinated by token economics.</dd></dl>
+  </div>
+</section>
+
+<!-- BIBLIOGRAPHY -->
+<section id="bibliography" class="card anchor-offset">
+  <h2>Bibliography</h2>
+  <p class="section-intro">Recommended texts from the official syllabus, annotated for how they map onto
+     the course.</p>
+  <ul class="biblio">
+    <li>
+      <div class="bt">Mastering Bitcoin: Programming the Open Blockchain</div>
+      <div class="ba">Andreas M. Antonopoulos (2017) · O'Reilly Media · <span class="isbn">ISBN 978149195438</span> (Digital)</div>
+      <div class="bn">The reference for Module B. Best for hashing, keys/addresses, the UTXO model, transactions, wallets, SPV, and PoW mining (Sessions 1–5).</div>
+    </li>
+    <li>
+      <div class="bt">Mastering Ethereum: Building Smart Contracts and Dapps</div>
+      <div class="ba">Andreas Antonopoulos &amp; Gavin Wood (2018) · O'Reilly Media · <span class="isbn">ISBN 978149197194</span> (Digital)</div>
+      <div class="bn">The reference for Modules C–E. Covers the account model, EVM, gas, Solidity, tokens, smart-contract security, DAOs and Dapps (Sessions 6–11).</div>
+    </li>
+    <li>
+      <div class="bt">Proof of Stake: The Making of Ethereum and the Philosophy of Blockchains</div>
+      <div class="ba">Vitalik Buterin &amp; Nathan Schneider (2022) · Seven Stories Press · <span class="isbn">ISBN 978164421248</span> (Digital)</div>
+      <div class="bn">Essays on consensus design and the social/economic philosophy behind PoS and Web3 (Sessions 3, 11).</div>
+    </li>
+    <li>
+      <div class="bt">Providing Sound Foundations for Cryptography: On the work of Shafi Goldwasser and Silvio Micali</div>
+      <div class="ba">Oded Goldreich (2019) · <span class="isbn">ISBN 9781450372671</span> (Digital)</div>
+      <div class="bn">The theoretical backbone: one-way functions, signatures, and the origins of zero-knowledge proofs (Sessions 2, 10).</div>
+    </li>
+  </ul>
+
+  <div class="rulebox" style="margin-top:18px">
+    <h4>Policies &amp; conduct</h4>
+    <ul>
+      <li><b>Behavior:</b> see IE University's Code of Conduct; the Program Director may add indications.</li>
+      <li><b>Attendance:</b> see IE University's Attendance Policy (80% rule applies — see Assessment above).</li>
+      <li><b>Ethics:</b> see IE University's Ethics Code.</li>
+    </ul>
+    <p style="margin:8px 0 0;color:var(--mute);font-size:12px">Full official details are in the
+       <a href="./SYLLABUS.pdf">syllabus PDF</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Course-structure companion to <em>Blockchain, Cryptocurrencies &amp; Fintech</em> (BCSAI, IE
+     University — Prof. Milan Groshev). Content reconstructed from the official course syllabus
+     (<a href="./SYLLABUS.pdf">PDF</a>). For the hands-on demos, head back to the
+     <a href="./index.html">interactive playground</a>.</p>
+</footer>
+
+</body>
+</html>
