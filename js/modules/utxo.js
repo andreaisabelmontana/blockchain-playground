@@ -1,7 +1,8 @@
-const initial = {
-  Alice: [{ id: 'tx0:0', amt: 1.0 }, { id: 'tx0:1', amt: 0.5 }, { id: 'tx0:2', amt: 0.2 }],
-  Bob:   [{ id: 'tx1:0', amt: 0.3 }, { id: 'tx1:1', amt: 0.1 }],
-};
+// Spend validation (input resolution, fee, change, double-spend rejection) is
+// the tested core in ../../src/utxo.js. This module is the click-to-spend UI.
+import { genesis, spend, FEE } from '../../src/utxo.js';
+
+const initial = genesis();
 let state, selected, log;
 
 function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -63,18 +64,17 @@ export function initUTXO() {
     const amt = +document.getElementById('utxo-amt').value;
     const ins = [...selected].filter(k => k.startsWith(sender + ':'));
     if (ins.length === 0) return alert('Select at least one input UTXO.');
-    const total = ins.reduce((s, k) =>
-      s + state[sender].find(u => u.id === k.split(':').slice(1).join(':')).amt, 0);
-    if (total < amt) return alert(`Insufficient inputs (${total} < ${amt}). Select more UTXOs.`);
-    const fee = 0.001;
-    if (total < amt + fee) return alert(`Need at least ${(amt+fee).toFixed(3)} BTC including fee.`);
-    const change = +(total - amt - fee).toFixed(8);
+    // Selection keys are "Sender:<utxoId>"; strip the sender prefix for the core.
+    const inputIds = ins.map(k => k.slice(sender.length + 1));
     const txId = 'tx' + (Math.random().toString(16).slice(2, 8));
-    state[sender] = state[sender].filter(u => !ins.includes(`${sender}:${u.id}`));
-    state[recipient].push({ id: `${txId}:0`, amt });
-    if (change > 0) state[sender].push({ id: `${txId}:1`, amt: change });
+    let res;
+    try {
+      res = spend(state, sender, recipient, inputIds, amt, txId);
+    } catch (e) {
+      return alert(e.message);
+    }
     log.unshift(
-      `${txId}: ${sender} → ${recipient}  ${amt} BTC  (fee ${fee})  change ${change.toFixed(3)}\n` +
+      `${txId}: ${sender} → ${recipient}  ${amt} BTC  (fee ${FEE})  change ${res.change.toFixed(3)}\n` +
       `  inputs: ${ins.join(', ')}`
     );
     selected.clear();

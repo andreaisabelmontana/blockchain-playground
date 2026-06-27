@@ -1,4 +1,8 @@
 import { sha256Hex } from './hash.js';
+// Chain linkage + tamper detection is the tested core in ../../src/blockchain.js.
+// Mining here stays async (crypto.subtle) for a responsive UI, but the
+// per-block validity rule is the same logic the tests prove.
+import { blockPreimage } from '../../src/blockchain.js';
 
 const chain = [];
 
@@ -8,7 +12,7 @@ async function mine(block, diff) {
   const target = targetPrefix(diff);
   let nonce = 0;
   while (true) {
-    const h = await sha256Hex(`${block.index}|${block.data}|${block.prev}|${nonce}`);
+    const h = await sha256Hex(blockPreimage({ ...block, nonce }));
     if (h.startsWith(target)) { block.nonce = nonce; block.hash = h; return; }
     nonce++;
     if (nonce > 5_000_000) throw new Error('gave up');
@@ -18,7 +22,7 @@ async function mine(block, diff) {
 async function recompute(diff) {
   for (let i = 0; i < chain.length; i++) {
     chain[i].prev = i === 0 ? '0'.repeat(64) : chain[i-1].hash;
-    chain[i].hash = await sha256Hex(`${chain[i].index}|${chain[i].data}|${chain[i].prev}|${chain[i].nonce}`);
+    chain[i].hash = await sha256Hex(blockPreimage(chain[i]));
     chain[i].valid = chain[i].hash.startsWith(targetPrefix(diff))
       && (i === 0 || chain[i].prev === chain[i-1].hash);
   }

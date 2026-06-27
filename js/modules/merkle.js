@@ -1,20 +1,11 @@
-import { sha256Hex } from './hash.js';
+// Tree building is the tested core in ../../src/merkle.js (deterministic,
+// framework-free). This module renders it. The core uses a synchronous pure
+// SHA-256 whose output is byte-identical to crypto.subtle's SHA-256.
+import { buildMerkle as buildMerkleCore } from '../../src/merkle.js';
 
-async function buildMerkle(leaves) {
+function buildMerkle(leaves) {
   if (leaves.length === 0) return { layers: [['(empty)']], root: '(empty)' };
-  let layer = await Promise.all(leaves.map(l => sha256Hex(l)));
-  const layers = [layer];
-  while (layer.length > 1) {
-    const next = [];
-    for (let i = 0; i < layer.length; i += 2) {
-      const a = layer[i];
-      const b = i + 1 < layer.length ? layer[i+1] : a;
-      next.push(await sha256Hex(a + b));
-    }
-    layers.push(next);
-    layer = next;
-  }
-  return { layers, root: layer[0] };
+  return buildMerkleCore(leaves);
 }
 
 function short(h) { return h.length > 16 ? h.slice(0, 8) + '…' + h.slice(-4) : h; }

@@ -1,26 +1,20 @@
 // Uniswap-style constant product AMM:  x * y = k
+// Math is the tested core in ../../src/amm.js; this module is the DOM wrapper.
+import { newPool, price as poolPrice, k as poolK, quoteEthForUsdc, quoteUsdcForEth } from '../../src/amm.js';
+
 let pool, log;
 
 function init() {
   // Start: 100 ETH × 200_000 USDC → price = 2000 USDC/ETH
-  pool = { eth: 100, usdc: 200_000, fee: 0.003, lpSupply: 4472.13 /* sqrt(eth*usdc) */ };
+  pool = { ...newPool(), lpSupply: 4472.13 /* sqrt(eth*usdc) */ };
   log = [`Initialize pool: 100 ETH / 200 000 USDC → price 2 000 USDC/ETH, k = ${(pool.eth*pool.usdc).toLocaleString()}`];
 }
 
-function price() { return pool.usdc / pool.eth; }
-function k()     { return pool.eth * pool.usdc; }
+function price() { return poolPrice(pool); }
+function k()     { return poolK(pool); }
 
-function swapEthForUsdc(dx) {
-  // (x + dx*(1-fee)) * (y - dy) = k
-  const dxNet = dx * (1 - pool.fee);
-  const dy = (pool.usdc * dxNet) / (pool.eth + dxNet);
-  return dy;
-}
-function swapUsdcForEth(dy_in) {
-  const dyNet = dy_in * (1 - pool.fee);
-  const dx = (pool.eth * dyNet) / (pool.usdc + dyNet);
-  return dx;
-}
+function swapEthForUsdc(dx)    { return quoteEthForUsdc(pool, dx); }
+function swapUsdcForEth(dy_in) { return quoteUsdcForEth(pool, dy_in); }
 
 function render() {
   document.getElementById('amm-eth').textContent  = pool.eth.toFixed(4);

@@ -1,120 +1,110 @@
-# Blockchain, Cryptocurrencies & Fintech — Interactive Companion
+# Blockchain Playground
 
-A static, no-build web app that visualizes every core concept from the
-**Blockchain, Cryptocurrencies, and Fintech** course as live, in-browser demos.
+Interactive playground for blockchain, cryptocurrency & fintech course concepts —
+17 in-browser modules, plus a set of framework-free, **tested** algorithm cores.
 
-## Modules
+The site (`index.html`) is a static, no-build web app: every core idea is a live
+demo. `course.html` and `project.html` are the editorial course/project pages.
+The interactive logic lives in `js/modules/*.js`; the math and state machines
+behind those demos are now extracted into dependency-free ES modules under
+`src/` and proven with Node's built-in test runner.
 
-1. **Hash** — SHA-256 with live avalanche-effect bit-diff
-2. **Signatures** — real ECDSA (P-256) keygen, sign, verify, tamper
-3. **Merkle trees** — build a Merkle root from arbitrary leaves
-4. **Block chain** — linked blocks, edit any block and watch tamper detection
-5. **Mining** — real PoW nonce search with hashrate
-6. **UTXO model** — click-to-spend Bitcoin transactions with change outputs
-7. **Bitcoin forks** — clickable timeline (P2SH, BCH, SegWit, BSV, Taproot, Ordinals)
-8. **Wallet** — privkey → pubkey → 0x-address derivation + mnemonic
-9. **ETH accounts** — EOA vs contract, balance/nonce/storage state
-10. **Gas (EIP-1559)** — interactive cost calculator with base/tip split
-11. **EVM** — step through a tiny program on the stack machine
-12. **Solidity** — deploy & call a simulated Counter contract with require/revert
-13. **ERC-20** — transfer / approve / transferFrom with allowance tracking
-14. **NFTs (ERC-721)** — mint, transfer, on-chain owner / off-chain metadata
-15. **AMM (Uniswap V2)** — x·y=k swap with real slippage & price impact
-16. **L2 Rollups** — batch N L2 txs into 1 L1 tx (optimistic & ZK variants)
-17. **Bitcoin halving** — block reward & cumulative supply across all 64 eras
-18. **PoW vs PoS** — qualitative comparison
+## Tested cores (`src/`)
 
-All cryptographic work runs locally in the browser via `window.crypto.subtle`.
-No network, no analytics, no tracking.
+| Module | What it does | Proven by |
+|---|---|---|
+| `sha256.js` | Pure-JS SHA-256, byte-identical to `crypto.subtle` | matches `node:crypto` on known + random vectors |
+| `blockchain.js` | Block hashing, chain linkage, tamper detection | editing a block invalidates the chain; recompute restores it |
+| `pow.js` | Proof-of-work nonce search + verification | found nonce meets the target; wrong nonce rejected; harder = more work |
+| `merkle.js` | Merkle root + inclusion proof | root is deterministic; valid proof verifies, tampered proof fails |
+| `utxo.js` | UTXO balances, spends, change, double-spend rules | valid spend conserves supply (−fee); overspend & double-spend rejected |
+| `erc20.js` | ERC-20 transfer / approve / transferFrom | transfers conserve supply; overspend & over-allowance revert |
+| `amm.js` | Constant-product AMM (`x·y=k`) | `k` preserved (≥, minus fee); output matches the formula; larger trade = worse price |
+| `signatures.js` | Signature bind-message-to-key semantics | valid sig verifies; tampered message or wrong key fails |
 
-## Run locally
+The browser modules now reuse these cores where it stays clean
+(`amm.js`, `erc20.js`, `merkle.js`, `blockchain.js`, `utxo.js`), so the demos run
+the exact same logic the tests cover. The live Hash, Signatures and Mining demos
+keep using `window.crypto.subtle` for responsiveness — `src/sha256.js` produces
+the identical digest, so Node tests and the browser agree bit-for-bit.
 
-Anything that serves static files works:
-
-```bash
-# from this docs/ folder
-python -m http.server 8000
-# then open http://localhost:8000
-```
-
-Or with Node:
-```bash
-npx serve .
-```
-
-## Deploy to GitHub Pages
-
-1. Create a repo (e.g. `blockchain-playground`) and push the **contents of this `docs/` folder** to the repo root, OR push the whole `BLOCKCHAIN/` folder and set Pages to serve from `/docs`.
-2. In GitHub: **Settings → Pages → Source: Deploy from a branch → `main` / `docs`** (or `main` / root if you pushed only the docs contents).
-3. Wait ~30 s. Site goes live at `https://<your-user>.github.io/<repo>/`.
-
-Step-by-step from this folder:
+## Run the tests
 
 ```bash
-cd "C:\Users\ASUS\Desktop\BLOCKCHAIN\docs"
-git init
-git add .
-git commit -m "Interactive blockchain playground"
-git branch -M main
-git remote add origin https://github.com/<your-user>/blockchain-playground.git
-git push -u origin main
-# then enable Pages in repo Settings → Pages → main / root
+node --test
 ```
 
-## File layout
+No dependencies, no install — Node 18+ (`node:test` + `node:assert`).
 
 ```
-docs/
-├── index.html                # 13 interactive sections
-├── styles.css
-├── js/
-│   ├── main.js               # bootstraps every module
-│   └── modules/
-│       ├── hash.js
-│       ├── signatures.js
-│       ├── merkle.js
-│       ├── blockchain.js
-│       ├── mining.js
-│       ├── utxo.js
-│       ├── forks.js
-│       ├── wallet.js
-│       ├── accounts.js
-│       ├── gas.js
-│       ├── evm.js
-│       ├── solidity.js
-│       ├── erc20.js
-│       ├── nft.js
-│       ├── amm.js
-│       ├── rollups.js
-│       └── halving.js
-└── README.md
+ℹ tests 45
+ℹ suites 0
+ℹ pass 45
+ℹ fail 0
+ℹ duration_ms 322
 ```
 
-## Course mapping
+A few of the named tests:
 
-| Session in syllabus | Module here |
-|---|---|
-| 1 — Introduction | `#intro` |
-| 2 — Hash & digital signatures | `#hash`, `#signatures` |
-| 3 — Blockchain basics | `#merkle`, `#blockchain`, `#mining` |
-| 4 — Transactions & validation | `#utxo` |
-| Bitcoin Forks, SW & Sync | `#forks` |
-| 6 — Wallets, ETH addresses | `#wallet`, `#accounts` |
-| 7–8 — ETH basics, gas | `#gas`, `#evm` |
-| 9 — Smart contracts & Solidity | `#solidity` |
-| 10 — Dapps, design principles | `#solidity`, `#accounts` |
-| 11 — ERC-20 / ERC-721 | `#erc20`, `#nft` |
-| 12 — Advanced (scaling, MEV, zk) | `#rollups`, `#consensus` |
-| Bitcoin halving / supply curve | `#halving` |
-| DeFi primitives | `#amm` |
+```
+✔ tampering with a block invalidates the chain
+✔ recompute repairs hashes after an edit and re-validates
+✔ a valid inclusion proof verifies for every leaf
+✔ a tampered proof fails verification
+✔ a found nonce produces a hash meeting the difficulty target
+✔ verification rejects a wrong nonce
+✔ higher difficulty statistically needs more work
+✔ double-spend in one transaction is rejected
+✔ an overspend (inputs do not cover amount + fee) is rejected
+✔ a valid transfer updates balances and conserves circulating supply
+✔ constant product k is preserved up to the fee across a swap
+✔ larger trades get a worse effective price (slippage)
+✔ sha256 is byte-identical to node:crypto for arbitrary inputs
+```
 
-## Limitations / honest disclosures
+## Run the site
 
-- Browser-native crypto (`window.crypto.subtle`) doesn't ship secp256k1, so the
-  Signature and Wallet demos use P-256 ECDSA. The shape of the pipeline is
-  identical to Bitcoin/Ethereum (curve point → hash → address).
-- The Ethereum address derivation here uses SHA-256 instead of Keccak-256
-  (real Ethereum) to avoid a 70 KB extra dependency. The principle is the same.
-- The EVM walker handles a small opcode subset (PUSH1, ADD, MUL, MSTORE, RETURN)
-  enough to convince you it's a stack machine.
-- The Solidity demo is JS-backed — full compilation would need solc-js.
+Any static file server works:
+
+```bash
+python -m http.server 8000   # then open http://localhost:8000
+# or: npx serve .
+```
+
+Open `index.html` for the playground, `course.html` / `project.html` for the
+editorial pages.
+
+## Modules in the playground
+
+Hash · Signatures · Merkle trees · Blockchain (tamper detection) · Mining (PoW) ·
+UTXO model · Bitcoin halving · Forks timeline · Wallet · ETH accounts · Gas
+(EIP-1559) · EVM stack machine · Solidity Counter · ERC-20 · NFT (ERC-721) ·
+AMM (Uniswap V2) · L2 rollups.
+
+## Layout
+
+```
+index.html  course.html  project.html  styles.css
+js/
+  main.js                # bootstraps every module
+  modules/*.js           # the 17 interactive demos (DOM wrappers)
+src/                      # framework-free, tested algorithm cores
+  sha256.js blockchain.js pow.js merkle.js utxo.js erc20.js amm.js signatures.js
+test/                    # node:test suites for every core
+package.json             # "type":"module", "test":"node --test"
+```
+
+## Honest disclosures
+
+- The browser Signature/Wallet demos use P-256 ECDSA via `crypto.subtle` (the
+  Web Crypto API does not ship secp256k1); the pipeline shape matches Bitcoin/
+  Ethereum. `src/signatures.js` models the *bind-message-to-key* property
+  deterministically with a SHA-256 MAC so it is testable under Node — it is not
+  ECDSA itself.
+- ETH address derivation in the demo uses SHA-256 in place of Keccak-256 to
+  avoid a large extra dependency; the principle is identical.
+- The EVM/Solidity demos cover a teaching-sized subset, not a full VM/compiler.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
