@@ -216,3 +216,14 @@ pre.sol code{display:block}
 .halving-table .row2.head{color:var(--accent);border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:6px}
 
 footer{max-width:1200px;margin:30px auto;padding:20px;color:var(--mute);font-size:12px;border-top:1px solid var(--line);text-align:center}
+
+/* coursework project grid */
+.muted{color:var(--mute)}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:12px;margin-top:14px}
+.proj-card{display:flex;flex-direction:column;gap:4px;padding:13px 15px;border:1px solid var(--line);
+  border-radius:12px;background:var(--tile);text-decoration:none;transition:transform .15s,border-color .15s}
+.proj-card:hover{transform:translateY(-2px);border-color:var(--accent);text-decoration:none}
+.proj-card b{color:var(--accent);font-weight:600;font-size:15px}
+.proj-card span{color:var(--mute);font-size:13px;line-height:1.45}
+.proj-card::after{content:'live ↗';font-size:11px;color:var(--accent2);margin-top:3px;letter-spacing:.04em}
+.proj-card.src::after{content:'source ↗'}
