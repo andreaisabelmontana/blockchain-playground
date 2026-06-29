@@ -9,6 +9,16 @@ The interactive logic lives in `js/modules/*.js`; the math and state machines
 behind those demos are now extracted into dependency-free ES modules under
 `src/` and proven with Node's built-in test runner.
 
+## Coursework
+
+Hands-on projects built for the course:
+[Rodeo](https://andreaisabelmontana.github.io/rodeo/) (a blockchain DAO for
+multi-robot task allocation) ·
+[Harthat Web3 Tutorial](https://andreaisabelmontana.github.io/harthat-web3-tutorial/)
+(deploy & call a Solidity contract with Hardhat) ·
+[Blockchain · Cryptocurrencies · Fintech](https://github.com/andreaisabelmontana/Blockchain-Cryptocurrencies-Fintech)
+(notes + mini-blockchain capstone).
+
 ## Tested cores (`src/`)
 
 | Module | What it does | Proven by |
